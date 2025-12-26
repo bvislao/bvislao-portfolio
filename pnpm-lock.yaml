@@ -23,6 +23,9 @@ dependencies:
   astro:
     specifier: ^5.16.6
     version: 5.16.6(typescript@5.9.3)
+  marked:
+    specifier: ^17.0.1
+    version: 17.0.1
   tailwindcss:
     specifier: ^4.1.18
     version: 4.1.18
@@ -3166,6 +3169,12 @@ packages:
 
   /markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
+    dev: false
+
+  /marked@17.0.1:
+    resolution: {integrity: sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==}
+    engines: {node: '>= 20'}
+    hasBin: true
     dev: false
 
   /mdast-util-definitions@6.0.0:

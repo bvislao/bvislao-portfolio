@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Admin — bvislaoch" description="Panel de administración del blog.">
+  <section class="mx-auto max-w-6xl px-4 py-12">
+    <div class="flex items-start justify-between gap-6">
+      <div>
+        <h1 class="text-3xl font-semibold tracking-tight">Admin</h1>
+        <p class="mt-2 text-sm opacity-80">Login con Google. Solo permitido para tu correo.</p>
+      </div>
+
+      <button id="btnLogin"
+        class="rounded-full px-4 py-2 text-sm text-white dark:text-zinc-950"
+        style="background: linear-gradient(90deg, rgb(var(--a1)), rgb(var(--a2)));">
+        Login con Google
+      </button>
+    </div>
+
+    <div id="state" class="mt-6 text-sm opacity-80"></div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-[.95fr_1.05fr]">
+      <aside class="rounded-2xl border p-5"
+        style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold">Posts</h2>
+          <button id="btnNew" class="text-sm underline opacity-80 hover:opacity-100">Nuevo</button>
+        </div>
+        <div id="list" class="mt-4 space-y-2"></div>
+      </aside>
+
+      <main class="rounded-2xl border p-6"
+        style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+        <h2 class="font-semibold">Editor</h2>
+
+        <div class="mt-4 grid gap-3">
+          <input id="title" class="w-full rounded-xl border px-4 py-2 text-sm"
+            placeholder="Título"
+            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);" />
+
+          <input id="slug" class="w-full rounded-xl border px-4 py-2 text-sm"
+            placeholder="slug-ejemplo"
+            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);" />
+
+          <input id="excerpt" class="w-full rounded-xl border px-4 py-2 text-sm"
+            placeholder="Extracto corto (1–2 líneas)"
+            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);" />
+
+          <textarea id="content" rows="14" class="w-full rounded-xl border px-4 py-3 text-sm"
+            placeholder="Markdown..."
+            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);"></textarea>
+
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <label class="inline-flex items-center gap-2 text-sm opacity-80">
+              <input id="published" type="checkbox" />
+              Publicar
+            </label>
+
+            <div class="flex gap-2">
+              <button id="btnSave" class="rounded-full border px-4 py-2 text-sm"
+                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+                Guardar
+              </button>
+              <button id="btnDelete" class="rounded-full border px-4 py-2 text-sm opacity-80"
+                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+                Eliminar
+              </button>
+              <button id="btnLogout" class="rounded-full border px-4 py-2 text-sm opacity-80"
+                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+                Logout
+              </button>
+            </div>
+          </div>
+
+          <p class="text-xs opacity-60">
+            Consejo: usa slugs cortos. Publicado = visible en /blog.
+          </p>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script type="module" src={new URL('../scripts/admin.ts', import.meta.url).href}></script>
+</BaseLayout>

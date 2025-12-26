@@ -1,0 +1,115 @@
+---
+type Scene = {
+  key: string;
+  title: string;
+  subtitle: string;
+  bullets: string[];
+  accent: "a1" | "a2" | "a3" | "a4";
+  link: { label: string; href: string };
+};
+
+const scenes: Scene[] = [
+  {
+    key: "payki",
+    title: "PAYKI",
+    subtitle: "Pagos con QR para transporte público.",
+    bullets: ["PWA", "Supabase (RLS)", "Edge Functions", "Web Push (VAPID)"],
+    accent: "a1",
+    link: { label: "Repo", href: "https://github.com/bvislao/payki" },
+  },
+  {
+    key: "antiphishing",
+    title: "Anti-Phishing Perú",
+    subtitle: "Extensión que detecta sitios look-alike.",
+    bullets: ["Heurísticas locales", "Modo Estricto", "Alertas + badge"],
+    accent: "a4",
+    link: { label: "Repo", href: "https://github.com/bvislao/antiphishing-peru-ext" },
+  },
+  {
+    key: "aliases",
+    title: "Aliases Git",
+    subtitle: "Productividad real con Git en tu día a día.",
+    bullets: ["Atajos útiles", "Setup rápido", "Buenas prácticas"],
+    accent: "a2",
+    link: { label: "Repo", href: "https://github.com/bvislao/aliases-git" },
+  },
+];
+---
+
+<section id="story" class="mx-auto max-w-6xl px-4 py-16">
+  <div class="grid gap-10 lg:grid-cols-[1.1fr_.9fr]">
+    <!-- Left: narrative -->
+    <div class="space-y-6">
+      <div data-reveal class="reveal">
+        <h2 class="text-3xl font-semibold tracking-tight">Historias en scroll</h2>
+        <p class="mt-2 text-sm opacity-80">Poco texto. Mucho contexto. Baja y mira el detalle.</p>
+      </div>
+
+      <div class="space-y-6">
+        {scenes.map((s) => (
+          <article
+            data-story-item
+            data-key={s.key}
+            data-accent={s.accent}
+            class="rounded-2xl border p-6 transition"
+            style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-xl font-semibold tracking-tight">{s.title}</h3>
+                <p class="mt-1 text-sm opacity-80">{s.subtitle}</p>
+              </div>
+
+              <span class="rounded-full border px-2 py-0.5 text-[11px] opacity-90"
+                    style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);">
+                case
+              </span>
+            </div>
+
+            <ul class="mt-4 space-y-1 text-xs opacity-80">
+              {s.bullets.map((b) => <li>• {b}</li>)}
+            </ul>
+
+            <a class="mt-5 inline-block text-sm underline opacity-80 hover:opacity-100"
+               href={s.link.href} target="_blank" rel="noreferrer noopener">
+              {s.link.label}
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Right: sticky visual -->
+    <aside class="lg:sticky lg:top-24 lg:h-[540px]">
+      <div class="relative h-[540px] overflow-hidden rounded-3xl border"
+           style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
+        <div class="absolute inset-0 opacity-70"
+             style="background: radial-gradient(circle at 30% 20%, rgb(var(--story-accent)/0.18), transparent 55%),
+                    radial-gradient(circle at 70% 70%, rgb(var(--story-accent)/0.14), transparent 55%);">
+        </div>
+
+        <div class="absolute inset-0 opacity-[0.09]"
+             style="background-image: linear-gradient(to right, rgb(var(--border)/.6) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgb(var(--border)/.6) 1px, transparent 1px);
+                    background-size: 48px 48px;">
+        </div>
+
+        <div class="relative flex h-full flex-col justify-between p-8">
+          <div>
+            <p class="text-xs opacity-70">Active</p>
+            <h3 id="storyTitle" class="mt-2 text-3xl font-semibold tracking-tight">PAYKI</h3>
+            <p id="storySubtitle" class="mt-2 text-sm opacity-80">Pagos con QR para transporte público.</p>
+          </div>
+
+          <div class="rounded-2xl border p-5"
+               style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);">
+            <p class="text-xs opacity-70">Qué demuestra</p>
+            <p id="storyValue" class="mt-2 text-sm opacity-85">
+              Producto + arquitectura: UX fluida, datos protegidos con RLS, y funciones para operaciones privilegiadas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
