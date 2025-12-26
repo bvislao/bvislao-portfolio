@@ -1,45 +1,113 @@
 ---
 import Logo from "@/components/Logo.astro";
-import type { Fragment } from "astro/dist/runtime/server";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { projects } from "@/data/project";
+import { profile } from "@/data/profile";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+type Project = {
+  name: string;
+  badge: string;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  stack: string[];
+  repo: string;
+};
+
+type ExperienceItem = {
+  company: string;
+  title: string;
+  period: string;
+  place: string;
+};
+
+const stackChips = [
+  "Astro", "Next.js", "Supabase", "Postgres", "RLS", "Edge Functions",
+  "TypeScript", ".NET / C#", "SQL"
+];
+
+const topExp = (profile.experience ?? []) as ExperienceItem[];
+const expSummary = topExp.slice(0, 4).map(e => `${e.company}`).join(" • ");
 ---
 
 <BaseLayout title="bvislaoch — Portafolio" description="Landing pro estilo Apple: proyectos, enfoque, contacto.">
+  <!-- Background effects -->
+  <div class="pointer-events-none fixed inset-0 -z-10">
+    <div class="absolute inset-0" style="background: rgb(var(--bg));"></div>
+
+    <!-- multi-accent glows -->
+    <div class="absolute -top-56 left-1/2 h-[820px] w-[820px] -translate-x-1/2 rounded-full blur-3xl"
+         style="background: radial-gradient(circle at center, rgb(var(--a1)/0.18), transparent 60%);"></div>
+
+    <div class="absolute top-40 left-10 h-[520px] w-[520px] rounded-full blur-3xl"
+         style="background: radial-gradient(circle at center, rgb(var(--a2)/0.16), transparent 60%);"></div>
+
+    <div class="absolute top-80 right-10 h-[520px] w-[520px] rounded-full blur-3xl"
+         style="background: radial-gradient(circle at center, rgb(var(--a3)/0.14), transparent 60%);"></div>
+
+    <!-- subtle grid -->
+    <div class="absolute inset-0 opacity-[0.08]"
+         style="background-image: linear-gradient(to right, rgb(var(--border)/.6) 1px, transparent 1px),
+                linear-gradient(to bottom, rgb(var(--border)/.6) 1px, transparent 1px);
+                background-size: 56px 56px;">
+    </div>
+  </div>
+
   <!-- Scroll progress -->
   <div class="fixed left-0 top-0 z-[60] h-[2px] w-full bg-transparent">
-    <div data-scroll-progress class="h-full origin-left scale-x-0 bg-zinc-900/80 dark:bg-white/80"></div>
+    <div data-scroll-progress class="h-full origin-left scale-x-0"
+         style="background: linear-gradient(90deg, rgb(var(--a1)), rgb(var(--a2)), rgb(var(--a3)));">
+    </div>
   </div>
 
   <!-- Navbar glass -->
-   
-  <header class="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur dark:border-zinc-800/60 dark:bg-zinc-950/60">
+  <header class="sticky top-0 z-50 border-b backdrop-blur"
+          style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.65);">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
       <a href="/" class="flex items-center gap-2 text-sm font-semibold tracking-tight">
-  <Logo class="opacity-90" />
-  <span>bvislaoch.dev</span>
-</a>
+        <Logo class="opacity-90" />
+        <span>bvislaoch.dev</span>
+      </a>
+
       <nav class="hidden gap-6 text-sm opacity-80 sm:flex">
         <a href="#work" class="hover:opacity-100">Work</a>
         <a href="#stack" class="hover:opacity-100">Stack</a>
+        <a href="#experience" class="hover:opacity-100">Experiencia</a>
         <a href="#about" class="hover:opacity-100">Sobre mí</a>
         <a href="#contact" class="hover:opacity-100">Contacto</a>
       </nav>
-      <a href="#contact" class="rounded-full border border-zinc-300 px-4 py-1.5 text-sm dark:border-zinc-700">
-        Hablemos
-      </a>
+
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          data-theme-toggle
+          class="rounded-full border px-3 py-1.5 text-sm opacity-90 hover:opacity-100"
+          style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);"
+          aria-label="Toggle theme"
+          title="Modo oscuro"
+        >
+          <span class="hidden dark:inline">☾</span>
+          <span class="dark:hidden">☀︎</span>
+        </button>
+
+        <a href="#contact" class="rounded-full border px-4 py-1.5 text-sm"
+           style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+          Hablemos
+        </a>
+      </div>
     </div>
   </header>
 
   <!-- HERO -->
   <section class="relative overflow-hidden">
-    <!-- glow -->
-    <div class="pointer-events-none absolute inset-0">
-      <div class="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-zinc-200/60 blur-3xl dark:bg-zinc-800/50"></div>
-    </div>
-
     <div class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
       <div class="max-w-3xl">
-        <p class="text-sm opacity-70">Desarrollador • Web • Producto</p>
+        <div class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs"
+             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+          <span class="h-1.5 w-1.5 rounded-full" style="background: rgb(var(--a1));"></span>
+          <span class="opacity-80">{profile.role} • {profile.location}</span>
+        </div>
 
         <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">
           Experiencias web rápidas,
@@ -47,49 +115,61 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </h1>
 
         <p class="mt-5 text-lg opacity-80 sm:text-xl">
-          Construyo landing pages y apps con performance primero: Astro / Next.js, UI limpia, y datos con Supabase.
+          Performance primero, UI limpia y datos con Supabase.
+          Experiencia en fintech/sector financiero: {expSummary}.
         </p>
 
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#work" class="rounded-full bg-zinc-900 px-5 py-2.5 text-sm text-white dark:bg-white dark:text-zinc-900">
+          <a href="#work"
+             class="rounded-full px-5 py-2.5 text-sm text-white dark:text-zinc-950"
+             style="background: linear-gradient(90deg, rgb(var(--a1)), rgb(var(--a2)));">
             Ver proyectos
           </a>
-          <a href="#contact" class="rounded-full border border-zinc-300 px-5 py-2.5 text-sm dark:border-zinc-700">
+          <a href="#contact"
+             class="rounded-full border px-5 py-2.5 text-sm"
+             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
             Contacto
           </a>
-          <a href="/blog" class="rounded-full border border-zinc-300 px-5 py-2.5 text-sm dark:border-zinc-700">
+          <a href="/blog"
+             class="rounded-full border px-5 py-2.5 text-sm"
+             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
             Blog
           </a>
         </div>
       </div>
 
-      <!-- Product shot (parallax sutil) -->
       <div class="mt-14 grid gap-6 sm:grid-cols-2">
-        <div data-reveal class="reveal rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
+        <div data-reveal class="reveal rounded-2xl border p-6"
+             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
           <p class="text-sm opacity-70">Enfoque</p>
           <h2 class="mt-2 text-2xl font-semibold tracking-tight">Diseño + ingeniería</h2>
           <p class="mt-2 text-sm opacity-80">
-            Menos ruido, más intención. Animaciones elegantes y accesibles, sin sacrificar velocidad.
+            Micro-interacciones sobrias, accesibilidad y velocidad real (LCP/CLS).
           </p>
         </div>
 
-        <div class="relative rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
-          <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-zinc-100/70 to-transparent dark:from-zinc-900/40"></div>
+        <div class="relative rounded-2xl border p-6"
+             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+          <div class="absolute inset-0 rounded-2xl opacity-70"
+               style="background: linear-gradient(180deg, rgb(var(--a3)/0.14), transparent);"></div>
+
           <div class="relative">
             <p class="text-sm opacity-70">Preview</p>
-            <div class="mt-4 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
-              <div class="h-9 border-b border-zinc-200 bg-white/70 dark:border-zinc-800 dark:bg-zinc-950/60"></div>
+            <div class="mt-4 overflow-hidden rounded-xl border"
+                 style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
+              <div class="h-9 border-b" style="border-color: rgb(var(--border));"></div>
               <div class="p-6">
                 <div data-parallax="0.10" class="will-change-transform">
-                  <div class="h-40 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950"></div>
+                  <div class="h-40 rounded-xl border"
+                       style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.6);"></div>
                   <p class="mt-3 text-xs opacity-70">Parallax sutil + reveal</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </section>
 
@@ -98,35 +178,60 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div data-reveal class="reveal">
       <h2 class="text-3xl font-semibold tracking-tight">Work</h2>
       <p class="mt-2 max-w-2xl text-sm opacity-80">
-        Casos con foco en performance, UX y arquitectura limpia.
+        Proyectos con foco en performance, producto y seguridad.
       </p>
     </div>
 
     <div class="mt-8 grid gap-4 sm:grid-cols-3">
-      {["Landing ultra-performante", "Dashboard / Admin", "Integraciones Supabase"].map((t) => (
-        <article data-reveal class="reveal rounded-2xl border border-zinc-200 p-5 dark:border-zinc-800">
-          <h3 class="font-medium">{t}</h3>
-          <p class="mt-2 text-sm opacity-80">Resumen corto, impacto claro, métricas o resultados.</p>
-          <a class="mt-4 inline-block text-sm underline opacity-80 hover:opacity-100" href="#">
-            Ver detalle
-          </a>
-        </article>
+      {(projects as any[]).map((p:any) => (
+        <div data-reveal class="reveal">
+          <ProjectCard {...p} />
+        </div>
       ))}
     </div>
   </section>
 
   <!-- STACK -->
   <section id="stack" class="mx-auto max-w-6xl px-4 py-16">
-    <div data-reveal class="reveal rounded-2xl border border-zinc-200 p-8 dark:border-zinc-800">
+    <div data-reveal class="reveal rounded-2xl border p-8 backdrop-blur"
+         style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
       <h2 class="text-3xl font-semibold tracking-tight">Stack</h2>
       <p class="mt-2 text-sm opacity-80">
-        Astro + Tailwind, MDX para contenido y Supabase para datos (DB/Storage/Edge).
+        Tecnologías que uso para construir productos con performance, seguridad y mantenibilidad.
       </p>
+
       <div class="mt-6 flex flex-wrap gap-2 text-xs">
-        {["Astro", "Tailwind v4", "MDX", "Supabase", "Postgres", "Storage", "Edge Functions", "Vercel"].map((x) => (
-          <span class="rounded-full border border-zinc-300 px-3 py-1 dark:border-zinc-700">{x}</span>
+        {stackChips.map((x) => (
+          <span class="rounded-full border px-3 py-1"
+                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.5);">
+            {x}
+          </span>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="mx-auto max-w-6xl px-4 py-16">
+    <div data-reveal class="reveal">
+      <h2 class="text-3xl font-semibold tracking-tight">Experiencia</h2>
+      <p class="mt-2 text-sm opacity-80">Ruta profesional en tecnología y finanzas.</p>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      {(profile.experience as ExperienceItem[]).map((e) => (
+        <div data-reveal class="reveal rounded-2xl border p-5"
+             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="font-medium">{e.company}</h3>
+              <p class="text-sm opacity-80">{e.title}</p>
+            </div>
+            <p class="text-xs opacity-70 text-right">{e.period}</p>
+          </div>
+          <p class="mt-3 text-xs opacity-70">{e.place}</p>
+        </div>
+      ))}
     </div>
   </section>
 
@@ -135,27 +240,53 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div class="grid gap-8 sm:grid-cols-2">
       <div data-reveal class="reveal">
         <h2 class="text-3xl font-semibold tracking-tight">Sobre mí</h2>
+
         <p class="mt-3 text-sm opacity-80">
-          Escribe aquí tu propuesta de valor: qué construyes, para quién, y cómo trabajas (rápido, ordenado, medible).
+          Soy {profile.role} con experiencia construyendo y manteniendo software para el sector financiero.
+          Me enfoco en productos web, integración de servicios y entrega limpia: performance, seguridad y mantenibilidad.
         </p>
+
+        <ul class="mt-6 space-y-2 text-sm opacity-80">
+          <li>• Fintech / banca: sistemas críticos, seguridad y datos.</li>
+          <li>• Web moderna: Astro/Next.js, UI clara y accesible.</li>
+          <li>• Backend pragmático: SQL/Postgres, RLS, funciones y automatización.</li>
+        </ul>
+
+        <div class="mt-6 flex flex-wrap gap-2 text-xs opacity-90">
+          {(profile.skills ?? []).slice(0, 10).map((s) => (
+            <span class="rounded-full border px-3 py-1"
+                  style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.5);">
+              {s}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div id="contact" data-reveal class="reveal rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
+      <div id="contact" data-reveal class="reveal rounded-2xl border p-6"
+           style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
         <h2 class="text-2xl font-semibold tracking-tight">Contacto</h2>
         <p class="mt-2 text-sm opacity-80">¿Un proyecto? Escríbeme y lo conversamos.</p>
 
         <div class="mt-5 flex flex-wrap gap-3 text-sm">
-         <div class="mt-5 flex flex-wrap gap-3 text-sm">
-  <a class="underline opacity-80 hover:opacity-100" href="mailto:bvislao95@gmail.com">
-    bvislao95@gmail.com
-  </a>
-  <a class="underline opacity-80 hover:opacity-100"
-     href="https://www.linkedin.com/in/bvislaochavez/"
-     target="_blank" rel="noreferrer">
-    LinkedIn
-  </a>
-</div>
-          <a class="underline opacity-80 hover:opacity-100" href="#" target="_blank">GitHub</a>
+          <a class="underline opacity-80 hover:opacity-100" href={`mailto:${profile.email}`}>
+            {profile.email}
+          </a>
+          <a class="underline opacity-80 hover:opacity-100" href={profile.linkedin}
+             target="_blank" rel="noreferrer noopener">
+            LinkedIn
+          </a>
+          <a class="underline opacity-80 hover:opacity-100" href={profile.github}
+             target="_blank" rel="noreferrer noopener">
+            GitHub
+          </a>
+        </div>
+
+        <div class="mt-6 rounded-xl border p-4 text-sm opacity-80"
+             style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);">
+          <p class="font-medium">Disponible para proyectos</p>
+          <p class="mt-1" style="color: rgb(var(--muted));">
+            Landing pages premium, PWA / dashboards y soluciones con Supabase.
+          </p>
         </div>
       </div>
     </div>
@@ -163,12 +294,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
   <!-- Minimal reveal CSS -->
   <style>
-    .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
-    .reveal.is-in{opacity:1;transform:translateY(0)}
-    @media (prefers-reduced-motion: reduce){
-      .reveal{opacity:1;transform:none;transition:none}
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.is-in { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
     }
   </style>
 
-  <script src="/scripts/landing.js" is:inline></script>
+  <script src="../../public/scripts/landing.js"></script>
 </BaseLayout>

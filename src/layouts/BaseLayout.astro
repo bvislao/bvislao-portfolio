@@ -8,7 +8,7 @@ type Props = {
   canonical?: string;
 };
 
-const { title = "bvislaoch.dev", description = "Portafolio", canonical }: Props = Astro.props;
+const { title = "bvislaoch_", description = "Portafolio", canonical }: Props = Astro.props;
 const canonicalUrl = canonical ?? Astro.url.href;
 ---
 
@@ -20,9 +20,11 @@ const canonicalUrl = canonical ?? Astro.url.href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+
+    <script src="../../public/scripts/theme.js"></script>
   </head>
 
-  <body class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+  <body class="min-h-screen">
     <main class="min-h-[70vh]">
       <slot />
     </main>

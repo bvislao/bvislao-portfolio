@@ -1,10 +1,21 @@
 ---
-import Container from "./Container.astro";
 const year = new Date().getFullYear();
 ---
-<footer class="border-t border-zinc-200/70 dark:border-zinc-800">
-  <Container class="py-6 text-sm opacity-80 flex flex-col gap-2">
-    <p>© {year} Bryan Vislao</p>
-    <p>Hecho con Astro + Tailwind.</p>
-  </Container>
+
+<footer class="border-t" style="border-color: rgb(var(--border));">
+  <div class="mx-auto max-w-6xl px-4 py-8 text-sm" style="color: rgb(var(--muted));">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} bvislaoch</p>
+      <div class="flex gap-4">
+        <a class="underline underline-offset-4 hover:opacity-100"
+           href="mailto:bvislao95@gmail.com">Email</a>
+        <a class="underline underline-offset-4 hover:opacity-100"
+           href="https://www.linkedin.com/in/bvislaochavez/"
+           target="_blank" rel="noreferrer noopener">LinkedIn</a>
+        <a class="underline underline-offset-4 hover:opacity-100"
+           href="https://github.com/bvislao"
+           target="_blank" rel="noreferrer noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
 </footer>

@@ -1,0 +1,86 @@
+---
+type Props = {
+  name: string;
+  badge: string;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  stack: string[];
+  repo: string;
+};
+
+const p = Astro.props as Props;
+
+const tone =
+  p.badge?.toLowerCase().includes("security") ? "a4" :
+  p.badge?.toLowerCase().includes("pwa") ? "a1" :
+  p.badge?.toLowerCase().includes("tool") ? "a2" :
+  "a3";
+
+const accent =
+  tone === "a1" ? "rgb(var(--a1))" :
+  tone === "a2" ? "rgb(var(--a2))" :
+  tone === "a4" ? "rgb(var(--a4))" :
+  "rgb(var(--a3))";
+---
+
+<article
+  class="group relative overflow-hidden rounded-2xl border p-5 shadow-sm backdrop-blur transition
+         hover:-translate-y-0.5 hover:shadow-lg"
+  style={`background: rgb(var(--card)/0.65); border-color: rgb(var(--border));`}
+>
+  <!-- subtle glow -->
+  <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    <div class="absolute -top-24 right-[-80px] h-56 w-56 rotate-12 rounded-full blur-2xl"
+         style={`background: radial-gradient(circle at center, ${accent}33, transparent 60%);`}>
+    </div>
+  </div>
+
+  <div class="relative">
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl border flex items-center justify-center"
+             style={`border-color: rgb(var(--border)); background: rgb(var(--card)/0.7);`}>
+          <span class="text-[11px] font-semibold opacity-80">BV</span>
+        </div>
+
+        <div>
+          <h3 class="font-medium leading-tight">{p.name}</h3>
+          <p class="text-sm opacity-75">{p.tagline}</p>
+        </div>
+      </div>
+
+      <span class="text-[11px] rounded-full border px-2 py-0.5 opacity-90"
+            style={`border-color: rgb(var(--border)); background: ${accent}14; color: rgb(var(--fg));`}>
+        {p.badge}
+      </span>
+    </div>
+
+    <p class="mt-4 text-sm opacity-80">{p.description}</p>
+
+    <ul class="mt-4 space-y-1 text-xs opacity-80">
+      {p.highlights.slice(0, 3).map((h) => <li>• {h}</li>)}
+    </ul>
+
+    <div class="mt-4 flex flex-wrap gap-2 text-[11px] opacity-80">
+      {p.stack.slice(0, 5).map((x) => (
+        <span class="rounded-full border px-2 py-0.5"
+              style={`border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);`}>
+          {x}
+        </span>
+      ))}
+    </div>
+
+    <div class="mt-5 flex items-center justify-between">
+      <a class="text-sm underline opacity-80 hover:opacity-100"
+         href={p.repo} target="_blank" rel="noreferrer noopener">
+        Ver repositorio
+      </a>
+
+      <span class="text-xs opacity-60 group-hover:opacity-80 transition-opacity"
+            style={`color: ${accent};`}>
+        ●
+      </span>
+    </div>
+  </div>
+</article>
