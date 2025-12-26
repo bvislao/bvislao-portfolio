@@ -1,13 +1,23 @@
 ---
+import Layout from "@/layouts/Layout.astro";
+import Container from "../../components/Container.astro";
 import { getCollection } from "astro:content";
+
 const posts = (await getCollection("blog"))
   .filter(p => !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
-<h1>Blog</h1>
-<ul>
-  {posts.map((p) => (
-    <li><a href={`/blog/${p.slug}`}>{p.data.title}</a></li>
-  ))}
-</ul>
+<Layout title="Blog — bvislaoch" description="Notas técnicas y aprendizajes.">
+  <Container>
+    <h1 class="text-3xl font-semibold">Blog</h1>
+    <ul class="mt-6 space-y-4">
+      {posts.map(p => (
+        <li class="border-b border-zinc-200 dark:border-zinc-800 pb-4">
+          <a class="text-lg font-medium hover:underline" href={`/blog/${p.slug}`}>{p.data.title}</a>
+          <p class="text-sm opacity-80">{p.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </Container>
+</Layout>

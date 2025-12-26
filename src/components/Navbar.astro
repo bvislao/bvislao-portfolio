@@ -1,0 +1,19 @@
+---
+import Container from "./Container.astro";
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/projects", label: "Proyectos" },
+  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "Sobre mí" },
+];
+---
+<header class="border-b border-zinc-200/70 dark:border-zinc-800">
+  <Container class="py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold tracking-tight">bvislaoch.dev</a>
+    <nav class="flex gap-4 text-sm">
+      {links.map(l => (
+        <a href={l.href} class="opacity-80 hover:opacity-100">{l.label}</a>
+      ))}
+    </nav>
+  </Container>
+</header>

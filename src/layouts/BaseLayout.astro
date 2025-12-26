@@ -1,0 +1,27 @@
+---
+import "../styles/global.css";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+
+const { title = "bvislaoch", description = "Portafolio", canonical } = Astro.props;
+const url = new URL(Astro.request.url);
+const canonicalUrl = canonical ?? url.href;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+  </head>
+  <body class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+    <Navbar />
+    <main class="py-10">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

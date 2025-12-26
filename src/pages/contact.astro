@@ -1,0 +1,48 @@
+---
+---
+
+<h1>Contacto</h1>
+
+<form id="contact" class="max-w-md space-y-3">
+  <input name="name" placeholder="Nombre" class="border p-2 w-full" required />
+  <input name="email" type="email" placeholder="Email" class="border p-2 w-full" required />
+  <textarea name="message" placeholder="Mensaje" class="border p-2 w-full" required></textarea>
+  <button class="border px-4 py-2" type="submit">Enviar</button>
+  <p id="status"></p>
+</form>
+
+<script>
+  const form = document.getElementById("contact");
+  const status = document.getElementById("status");
+
+  if (!(form instanceof HTMLFormElement) || !(status instanceof HTMLElement)) {
+    // If elements are missing, don't attach the handler
+    console.warn("Contact form or status element not found.");
+  } else {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "Enviando...";
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      const res = await fetch(`${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.PUBLIC_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      const json = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        status.textContent = json?.error || "Error al enviar.";
+        return;
+      }
+
+      status.textContent = "Listo. ¡Gracias!";
+      form.reset();
+    });
+  }
+</script>

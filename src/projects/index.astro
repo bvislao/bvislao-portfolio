@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Container from "@/components/Container.astro";
+import { projects } from "@/data/project";
+---
+
+<BaseLayout title="Proyectos — bvislaoch" description="Selección de proyectos.">
+  <Container>
+    <h1 class="text-3xl font-semibold">Proyectos</h1>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {projects.map(p => (
+        <a href={p.href} class="rounded-lg border border-zinc-200 dark:border-zinc-800 p-4 hover:opacity-95">
+          <h3 class="font-medium">{p.title}</h3>
+          <p class="text-sm opacity-80 mt-1">{p.description}</p>
+          <p class="text-xs opacity-70 mt-3">{p.stack.join(" · ")}</p>
+        </a>
+      ))}
+    </div>
+  </Container>
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Container from "../components/Container.astro";
+---
+
+<BaseLayout
+  title="bvislaoch — Portafolio"
+  description="Portafolio de desarrollo: proyectos, blog y contacto."
+>
+  <Container>
+    <section class="space-y-4">
+      <p class="text-sm opacity-70">Desarrollador</p>
+      <h1 class="text-4xl font-semibold tracking-tight">
+        Construyo productos web rápidos, limpios y escalables.
+      </h1>
+      <p class="text-lg opacity-80 max-w-2xl">
+        Astro para performance, Next.js cuando toca app, Supabase para datos y autenticación.
+      </p>
+
+      <div class="flex gap-3 pt-2">
+        <a class="px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700" href="/projects">Ver proyectos</a>
+        <a class="px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700" href="/blog">Leer blog</a>
+      </div>
+    </section>
+
+    <section class="mt-12 grid gap-4 sm:grid-cols-3">
+      {["Performance primero", "Código mantenible", "Diseño claro"].map(x => (
+        <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 p-4">
+          <h3 class="font-medium">{x}</h3>
+          <p class="text-sm opacity-80 mt-1">Enfoque práctico para entregar valor sin ruido.</p>
+        </div>
+      ))}
+    </section>
+  </Container>
+</BaseLayout>
