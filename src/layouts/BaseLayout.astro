@@ -1,11 +1,15 @@
 ---
 import "../styles/global.css";
-import Navbar from "@/components/Navbar.astro";
-import Footer from "@/components/Footer.astro";
+import Footer from "../components/Footer.astro";
 
-const { title = "bvislaoch", description = "Portafolio", canonical } = Astro.props;
-const url = new URL(Astro.request.url);
-const canonicalUrl = canonical ?? url.href;
+type Props = {
+  title?: string;
+  description?: string;
+  canonical?: string;
+};
+
+const { title = "bvislaoch.dev", description = "Portafolio", canonical }: Props = Astro.props;
+const canonicalUrl = canonical ?? Astro.url.href;
 ---
 
 <!doctype html>
@@ -17,9 +21,9 @@ const canonicalUrl = canonical ?? url.href;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
   </head>
+
   <body class="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-    <Navbar />
-    <main class="py-10">
+    <main class="min-h-[70vh]">
       <slot />
     </main>
     <Footer />

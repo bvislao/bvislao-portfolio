@@ -1,35 +1,174 @@
 ---
+import Logo from "@/components/Logo.astro";
+import type { Fragment } from "astro/dist/runtime/server";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Container from "../components/Container.astro";
 ---
 
-<BaseLayout
-  title="bvislaoch — Portafolio"
-  description="Portafolio de desarrollo: proyectos, blog y contacto."
->
-  <Container>
-    <section class="space-y-4">
-      <p class="text-sm opacity-70">Desarrollador</p>
-      <h1 class="text-4xl font-semibold tracking-tight">
-        Construyo productos web rápidos, limpios y escalables.
-      </h1>
-      <p class="text-lg opacity-80 max-w-2xl">
-        Astro para performance, Next.js cuando toca app, Supabase para datos y autenticación.
-      </p>
+<BaseLayout title="bvislaoch — Portafolio" description="Landing pro estilo Apple: proyectos, enfoque, contacto.">
+  <!-- Scroll progress -->
+  <div class="fixed left-0 top-0 z-[60] h-[2px] w-full bg-transparent">
+    <div data-scroll-progress class="h-full origin-left scale-x-0 bg-zinc-900/80 dark:bg-white/80"></div>
+  </div>
 
-      <div class="flex gap-3 pt-2">
-        <a class="px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700" href="/projects">Ver proyectos</a>
-        <a class="px-4 py-2 rounded border border-zinc-300 dark:border-zinc-700" href="/blog">Leer blog</a>
-      </div>
-    </section>
+  <!-- Navbar glass -->
+   
+  <header class="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur dark:border-zinc-800/60 dark:bg-zinc-950/60">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <a href="/" class="flex items-center gap-2 text-sm font-semibold tracking-tight">
+  <Logo class="opacity-90" />
+  <span>bvislaoch.dev</span>
+</a>
+      <nav class="hidden gap-6 text-sm opacity-80 sm:flex">
+        <a href="#work" class="hover:opacity-100">Work</a>
+        <a href="#stack" class="hover:opacity-100">Stack</a>
+        <a href="#about" class="hover:opacity-100">Sobre mí</a>
+        <a href="#contact" class="hover:opacity-100">Contacto</a>
+      </nav>
+      <a href="#contact" class="rounded-full border border-zinc-300 px-4 py-1.5 text-sm dark:border-zinc-700">
+        Hablemos
+      </a>
+    </div>
+  </header>
 
-    <section class="mt-12 grid gap-4 sm:grid-cols-3">
-      {["Performance primero", "Código mantenible", "Diseño claro"].map(x => (
-        <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 p-4">
-          <h3 class="font-medium">{x}</h3>
-          <p class="text-sm opacity-80 mt-1">Enfoque práctico para entregar valor sin ruido.</p>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <!-- glow -->
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-zinc-200/60 blur-3xl dark:bg-zinc-800/50"></div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+      <div class="max-w-3xl">
+        <p class="text-sm opacity-70">Desarrollador • Web • Producto</p>
+
+        <h1 class="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">
+          Experiencias web rápidas,
+          <span class="opacity-70">claras y memorables.</span>
+        </h1>
+
+        <p class="mt-5 text-lg opacity-80 sm:text-xl">
+          Construyo landing pages y apps con performance primero: Astro / Next.js, UI limpia, y datos con Supabase.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#work" class="rounded-full bg-zinc-900 px-5 py-2.5 text-sm text-white dark:bg-white dark:text-zinc-900">
+            Ver proyectos
+          </a>
+          <a href="#contact" class="rounded-full border border-zinc-300 px-5 py-2.5 text-sm dark:border-zinc-700">
+            Contacto
+          </a>
+          <a href="/blog" class="rounded-full border border-zinc-300 px-5 py-2.5 text-sm dark:border-zinc-700">
+            Blog
+          </a>
         </div>
+      </div>
+
+      <!-- Product shot (parallax sutil) -->
+      <div class="mt-14 grid gap-6 sm:grid-cols-2">
+        <div data-reveal class="reveal rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
+          <p class="text-sm opacity-70">Enfoque</p>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Diseño + ingeniería</h2>
+          <p class="mt-2 text-sm opacity-80">
+            Menos ruido, más intención. Animaciones elegantes y accesibles, sin sacrificar velocidad.
+          </p>
+        </div>
+
+        <div class="relative rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
+          <div class="absolute inset-0 rounded-2xl bg-gradient-to-b from-zinc-100/70 to-transparent dark:from-zinc-900/40"></div>
+          <div class="relative">
+            <p class="text-sm opacity-70">Preview</p>
+            <div class="mt-4 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800">
+              <div class="h-9 border-b border-zinc-200 bg-white/70 dark:border-zinc-800 dark:bg-zinc-950/60"></div>
+              <div class="p-6">
+                <div data-parallax="0.10" class="will-change-transform">
+                  <div class="h-40 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950"></div>
+                  <p class="mt-3 text-xs opacity-70">Parallax sutil + reveal</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work" class="mx-auto max-w-6xl px-4 py-16">
+    <div data-reveal class="reveal">
+      <h2 class="text-3xl font-semibold tracking-tight">Work</h2>
+      <p class="mt-2 max-w-2xl text-sm opacity-80">
+        Casos con foco en performance, UX y arquitectura limpia.
+      </p>
+    </div>
+
+    <div class="mt-8 grid gap-4 sm:grid-cols-3">
+      {["Landing ultra-performante", "Dashboard / Admin", "Integraciones Supabase"].map((t) => (
+        <article data-reveal class="reveal rounded-2xl border border-zinc-200 p-5 dark:border-zinc-800">
+          <h3 class="font-medium">{t}</h3>
+          <p class="mt-2 text-sm opacity-80">Resumen corto, impacto claro, métricas o resultados.</p>
+          <a class="mt-4 inline-block text-sm underline opacity-80 hover:opacity-100" href="#">
+            Ver detalle
+          </a>
+        </article>
       ))}
-    </section>
-  </Container>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack" class="mx-auto max-w-6xl px-4 py-16">
+    <div data-reveal class="reveal rounded-2xl border border-zinc-200 p-8 dark:border-zinc-800">
+      <h2 class="text-3xl font-semibold tracking-tight">Stack</h2>
+      <p class="mt-2 text-sm opacity-80">
+        Astro + Tailwind, MDX para contenido y Supabase para datos (DB/Storage/Edge).
+      </p>
+      <div class="mt-6 flex flex-wrap gap-2 text-xs">
+        {["Astro", "Tailwind v4", "MDX", "Supabase", "Postgres", "Storage", "Edge Functions", "Vercel"].map((x) => (
+          <span class="rounded-full border border-zinc-300 px-3 py-1 dark:border-zinc-700">{x}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT + CONTACT -->
+  <section id="about" class="mx-auto max-w-6xl px-4 py-16">
+    <div class="grid gap-8 sm:grid-cols-2">
+      <div data-reveal class="reveal">
+        <h2 class="text-3xl font-semibold tracking-tight">Sobre mí</h2>
+        <p class="mt-3 text-sm opacity-80">
+          Escribe aquí tu propuesta de valor: qué construyes, para quién, y cómo trabajas (rápido, ordenado, medible).
+        </p>
+      </div>
+
+      <div id="contact" data-reveal class="reveal rounded-2xl border border-zinc-200 p-6 dark:border-zinc-800">
+        <h2 class="text-2xl font-semibold tracking-tight">Contacto</h2>
+        <p class="mt-2 text-sm opacity-80">¿Un proyecto? Escríbeme y lo conversamos.</p>
+
+        <div class="mt-5 flex flex-wrap gap-3 text-sm">
+         <div class="mt-5 flex flex-wrap gap-3 text-sm">
+  <a class="underline opacity-80 hover:opacity-100" href="mailto:bvislao95@gmail.com">
+    bvislao95@gmail.com
+  </a>
+  <a class="underline opacity-80 hover:opacity-100"
+     href="https://www.linkedin.com/in/bvislaochavez/"
+     target="_blank" rel="noreferrer">
+    LinkedIn
+  </a>
+</div>
+          <a class="underline opacity-80 hover:opacity-100" href="#" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Minimal reveal CSS -->
+  <style>
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.is-in{opacity:1;transform:translateY(0)}
+    @media (prefers-reduced-motion: reduce){
+      .reveal{opacity:1;transform:none;transition:none}
+    }
+  </style>
+
+  <script src="/scripts/landing.js" is:inline></script>
 </BaseLayout>

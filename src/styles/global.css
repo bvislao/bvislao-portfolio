@@ -2,3 +2,4 @@
 @plugin "@tailwindcss/typography";
 
 :root { color-scheme: light dark; }
+html { scroll-behavior: smooth; }
