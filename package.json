@@ -1,0 +1,32 @@
+{
+  "name": "bvislao-portfolio",
+  "version": "1.0.0",
+  "description": "CV y portafolio de proyectos de Bryan Vislao",
+  "main": "index.js",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bvislao/bvislao-portfolio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bvislao/bvislao-portfolio/issues"
+  },
+  "homepage": "https://github.com/bvislao/bvislao-portfolio#readme",
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/tailwind": "^6.0.2",
+    "@supabase/supabase-js": "^2.89.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.6",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
+  }
+}
