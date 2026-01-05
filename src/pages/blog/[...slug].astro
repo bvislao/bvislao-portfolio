@@ -3,6 +3,23 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { createClient } from "@supabase/supabase-js";
 import { marked } from "marked";
 
+export async function getStaticPaths() {
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("slug")
+    .eq("status", "published");
+
+  return posts?.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  })) ?? [];
+}
+
 const supabase = createClient(
   import.meta.env.PUBLIC_SUPABASE_URL,
   import.meta.env.PUBLIC_SUPABASE_ANON_KEY
