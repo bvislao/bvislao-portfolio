@@ -1,0 +1,124 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Supabase Test" description="Test Supabase connection">
+  <section class="mx-auto max-w-4xl px-4 py-12">
+    <h1 class="text-3xl font-semibold tracking-tight">Supabase Connection Test</h1>
+    
+    <div class="mt-8 space-y-4">
+      <div class="card p-4">
+        <h2 class="font-semibold mb-2">Environment Variables</h2>
+        <p class="text-sm">PUBLIC_SUPABASE_URL: {import.meta.env.PUBLIC_SUPABASE_URL || 'Not set'}</p>
+        <p class="text-sm">PUBLIC_SUPABASE_ANON_KEY: {import.meta.env.PUBLIC_SUPABASE_ANON_KEY ? 'Set' : 'Not set'}</p>
+      </div>
+      
+      <div class="card p-4">
+        <h2 class="font-semibold mb-2">Test Actions</h2>
+        <div class="space-x-2">
+          <button id="testConnection" class="btn-primary">Test Connection</button>
+          <button id="testGoogleLogin" class="btn-primary">Test Google Login</button>
+          <button id="checkSession" class="btn-secondary">Check Session</button>
+        </div>
+      </div>
+      
+      <div id="results" class="card p-4">
+        <h2 class="font-semibold mb-2">Results</h2>
+        <pre id="output" class="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-auto max-h-64"></pre>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { createClient } from '@supabase/supabase-js';
+    
+    const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+    const SUPABASE_ANON = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+    
+    const output = document.getElementById('output');
+    const results = document.getElementById('results');
+    
+    function log(message) {
+      console.log(message);
+      output.textContent += new Date().toLocaleTimeString() + ': ' + JSON.stringify(message, null, 2) + '\n\n';
+    }
+    
+    function clearOutput() {
+      output.textContent = '';
+    }
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+    
+    log('Supabase client created');
+    log('URL: ' + SUPABASE_URL);
+    log('Anon Key: ' + (SUPABASE_ANON ? 'Set' : 'Not set'));
+    
+    document.getElementById('testConnection').onclick = async () => {
+      clearOutput();
+      log('Testing connection...');
+      
+      try {
+        const { data, error } = await supabase.from('blog_posts').select('count');
+        if (error) {
+          log('Connection error: ' + error.message);
+        } else {
+          log('Connection successful!');
+          log('Data: ' + JSON.stringify(data));
+        }
+      } catch (err) {
+        log('Connection failed: ' + String(err));
+      }
+    };
+    
+    document.getElementById('testGoogleLogin').onclick = async () => {
+      clearOutput();
+      log('Testing Google login...');
+      
+      try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: { 
+            redirectTo: window.location.origin + '/admin'
+          }
+        });
+        
+        log('OAuth initiated');
+        log('Data: ' + JSON.stringify(data));
+        if (error) log('Error: ' + error.message);
+      } catch (err) {
+        log('Login failed: ' + String(err));
+      }
+    };
+    
+    document.getElementById('checkSession').onclick = async () => {
+      clearOutput();
+      log('Checking session...');
+      
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          log('Session error: ' + error.message);
+        } else if (session) {
+          log('Session found!');
+          log('User: ' + JSON.stringify(session.user, null, 2));
+        } else {
+          log('No active session');
+        }
+      } catch (err) {
+        log('Session check failed: ' + String(err));
+      }
+    };
+    
+    // Check current session on load
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        log('Current session found');
+        log('User email: ' + session.user.email);
+      } else {
+        log('No current session');
+      }
+    })();
+  </script>
+</BaseLayout>

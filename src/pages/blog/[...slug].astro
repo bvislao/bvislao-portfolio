@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   const { data: posts } = await supabase
     .from("blog_posts")
     .select("slug")
-    .eq("status", "published");
+    .eq("published", true);
 
   return posts?.map((post) => ({
     params: { slug: post.slug },
@@ -33,20 +33,20 @@ const { slug } = Astro.params;
 
 const { data: post } = await supabase
   .from("blog_posts")
-  .select("title,excerpt,content_md,published_at")
+  .select("title,excerpt,content,created_at")
   .eq("slug", slug)
-  .eq("status", "published")
+  .eq("published", true)
   .maybeSingle();
 
 if (!post) return Astro.redirect("/blog");
 
-const html = marked.parse(post.content_md);
+const html = marked.parse(post.content);
 ---
 
 <BaseLayout title={`${post.title} — bvislaoch`} description={post.excerpt ?? ""}>
   <section class="mx-auto max-w-3xl px-4 py-16">
     <h1 class="text-4xl font-semibold tracking-tight">{post.title}</h1>
-    <p class="mt-3 text-sm opacity-70">{post.published_at?.slice(0,10)}</p>
+    <p class="mt-3 text-sm opacity-70">{post.created_at?.slice(0,10)}</p>
 
     <article class="prose mt-10 dark:prose-invert max-w-none" set:html={html}></article>
   </section>

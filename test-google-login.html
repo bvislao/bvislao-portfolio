@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Login Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Google Login Test</h1>
+    <button onclick="login()">Login with Google</button>
+    <button onclick="logout()">Logout</button>
+    <div id="status"></div>
+    <div id="user"></div>
+
+    <script>
+        const supabase = createClient(
+            'https://zyhtpgfjkvxobmgldxzz.supabase.co',
+            'your-anon-key-here' // Replace with actual anon key
+        );
+
+        async function login() {
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: 'https://zyhtpgfjkvxobmgldxzz.supabase.co/auth/v1/callback'
+                }
+            });
+            
+            if (error) {
+                document.getElementById('status').textContent = 'Error: ' + error.message;
+            } else {
+                document.getElementById('status').textContent = 'Redirecting to Google...';
+            }
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            document.getElementById('status').textContent = 'Logged out';
+            document.getElementById('user').textContent = '';
+        }
+
+        // Check current session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                document.getElementById('status').textContent = 'Logged in';
+                document.getElementById('user').textContent = JSON.stringify(session.user, null, 2);
+            } else {
+                document.getElementById('status').textContent = 'Not logged in';
+            }
+        });
+    </script>
+</body>
+</html>

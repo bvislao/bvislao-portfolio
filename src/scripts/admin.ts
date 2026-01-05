@@ -64,7 +64,7 @@ async function loadPosts() {
 
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("id,title,slug,status,updated_at")
+    .select("id,title,slug,published,updated_at")
     .order("updated_at", { ascending: false });
 
   if (error) {
@@ -80,7 +80,7 @@ async function loadPosts() {
     a.style.borderColor = "rgb(var(--border))";
     a.style.background = "rgb(var(--bg)/0.35)";
     a.innerHTML = `<div class="font-medium">${p.title}</div>
-                   <div class="text-xs opacity-70">${p.slug} • ${p.status}</div>`;
+                   <div class="text-xs opacity-70">${p.slug} • ${p.published ? 'published' : 'draft'}</div>`;
     a.onclick = () => loadOne(p.id);
     list.appendChild(a);
   });
@@ -105,8 +105,8 @@ async function loadOne(id: string) {
   title.value = data.title ?? "";
   slug.value = data.slug ?? "";
   excerpt.value = data.excerpt ?? "";
-  content.value = data.content_md ?? "";
-  published.checked = data.status === "published";
+content.value = data.content ?? "";
+published.checked = data.published === true;
 }
 
 function clearEditor() {
@@ -157,16 +157,12 @@ btnSave.onclick = async () => {
     return;
   }
 
-  const status = published.checked ? "published" : "draft";
-  const published_at = published.checked ? new Date().toISOString() : null;
-
   const payload: any = {
     title: t,
     slug: s,
     excerpt: ex || null,
-    content_md: md,
-    status,
-    published_at,
+    content: md,
+    published: published.checked,
   };
 
   const { data: userData } = await supabase.auth.getUser();
