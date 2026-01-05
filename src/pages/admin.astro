@@ -10,9 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <p class="mt-2 text-sm opacity-80">Login con Google. Solo permitido para tu correo.</p>
       </div>
 
-      <button id="btnLogin"
-        class="rounded-full px-4 py-2 text-sm text-white dark:text-zinc-950"
-        style="background: linear-gradient(90deg, rgb(var(--a1)), rgb(var(--a2)));">
+      <button id="btnLogin" class="btn-primary">
         Login con Google
       </button>
     </div>
@@ -20,8 +18,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <div id="state" class="mt-6 text-sm opacity-80"></div>
 
     <div class="mt-10 grid gap-6 lg:grid-cols-[.95fr_1.05fr]">
-      <aside class="rounded-2xl border p-5"
-        style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+      <aside class="card">
         <div class="flex items-center justify-between">
           <h2 class="font-semibold">Posts</h2>
           <button id="btnNew" class="text-sm underline opacity-80 hover:opacity-100">Nuevo</button>
@@ -29,26 +26,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <div id="list" class="mt-4 space-y-2"></div>
       </aside>
 
-      <main class="rounded-2xl border p-6"
-        style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+      <main class="card">
         <h2 class="font-semibold">Editor</h2>
 
         <div class="mt-4 grid gap-3">
-          <input id="title" class="w-full rounded-xl border px-4 py-2 text-sm"
+          <input id="title" class="w-full rounded-xl border px-4 py-2 text-sm glass"
             placeholder="Título"
-            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);" />
+            style="border-color: rgb(var(--border));" />
 
-          <input id="slug" class="w-full rounded-xl border px-4 py-2 text-sm"
+          <input id="slug" class="w-full rounded-xl border px-4 py-2 text-sm glass"
             placeholder="slug-ejemplo"
-            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);" />
+            style="border-color: rgb(var(--border));" />
 
-          <input id="excerpt" class="w-full rounded-xl border px-4 py-2 text-sm"
+          <input id="excerpt" class="w-full rounded-xl border px-4 py-2 text-sm glass"
             placeholder="Extracto corto (1–2 líneas)"
-            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);" />
+            style="border-color: rgb(var(--border));" />
 
-          <textarea id="content" rows="14" class="w-full rounded-xl border px-4 py-3 text-sm"
+          <textarea id="content" rows="14" class="w-full rounded-xl border px-4 py-3 text-sm glass"
             placeholder="Markdown..."
-            style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);"></textarea>
+            style="border-color: rgb(var(--border));"></textarea>
 
           <div class="flex flex-wrap items-center justify-between gap-3">
             <label class="inline-flex items-center gap-2 text-sm opacity-80">
@@ -57,16 +53,13 @@ import BaseLayout from "../layouts/BaseLayout.astro";
             </label>
 
             <div class="flex gap-2">
-              <button id="btnSave" class="rounded-full border px-4 py-2 text-sm"
-                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+              <button id="btnSave" class="btn-primary">
                 Guardar
               </button>
-              <button id="btnDelete" class="rounded-full border px-4 py-2 text-sm opacity-80"
-                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+              <button id="btnDelete" class="btn-secondary opacity-80">
                 Eliminar
               </button>
-              <button id="btnLogout" class="rounded-full border px-4 py-2 text-sm opacity-80"
-                style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
+              <button id="btnLogout" class="btn-secondary opacity-80">
                 Logout
               </button>
             </div>

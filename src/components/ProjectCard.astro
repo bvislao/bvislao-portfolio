@@ -1,12 +1,20 @@
 ---
 type Props = {
+  id: string;
   name: string;
   badge: string;
   tagline: string;
   description: string;
   highlights: string[];
   stack: string[];
-  repo: string;
+  links: {
+    repo?: string;
+    demo?: string;
+    [key: string]: string | undefined;
+  };
+  status: 'active' | 'archived' | 'draft';
+  featured: boolean;
+  sort_order: number;
 };
 
 const p = Astro.props as Props;
@@ -25,14 +33,15 @@ const accent =
 ---
 
 <article
-  class="group relative overflow-hidden rounded-2xl border p-5 shadow-sm backdrop-blur transition
-         hover:-translate-y-0.5 hover:shadow-lg"
-  style={`background: rgb(var(--card)/0.65); border-color: rgb(var(--border));`}
+  class="group relative overflow-hidden rounded-2xl border p-5 shadow-sm backdrop-blur card hover-lift"
 >
-  <!-- subtle glow -->
-  <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-    <div class="absolute -top-24 right-[-80px] h-56 w-56 rotate-12 rounded-full blur-2xl"
-         style={`background: radial-gradient(circle at center, ${accent}33, transparent 60%);`}>
+  <!-- enhanced glow -->
+  <div class="pointer-events-none absolute inset-0 opacity-0 transition-all duration-500 group-hover:opacity-100">
+    <div class="absolute -top-24 right-[-80px] h-56 w-56 rotate-12 rounded-full blur-3xl animate-pulse"
+         style={`background: radial-gradient(circle at center, ${accent}44, transparent 70%);`}>
+    </div>
+    <div class="absolute -bottom-24 left-[-80px] h-48 w-48 -rotate-12 rounded-full blur-2xl"
+         style={`background: radial-gradient(circle at center, ${accent}22, transparent 60%);`}>
     </div>
   </div>
 
@@ -71,11 +80,21 @@ const accent =
       ))}
     </div>
 
-    <div class="mt-5 flex items-center justify-between">
-      <a class="text-sm underline opacity-80 hover:opacity-100"
-         href={p.repo} target="_blank" rel="noreferrer noopener">
-        Ver repositorio
-      </a>
+    <div class="mt-5 flex items-center justify-between gap-3">
+      <div class="flex gap-3">
+        {p.links.repo && (
+          <a class="text-sm underline opacity-80 hover:opacity-100"
+             href={p.links.repo} target="_blank" rel="noreferrer noopener">
+            Repo
+          </a>
+        )}
+        {p.links.demo && (
+          <a class="text-sm underline opacity-80 hover:opacity-100"
+             href={p.links.demo} target="_blank" rel="noreferrer noopener">
+            Demo
+          </a>
+        )}
+      </div>
 
       <span class="text-xs opacity-60 group-hover:opacity-80 transition-opacity"
             style={`color: ${accent};`}>

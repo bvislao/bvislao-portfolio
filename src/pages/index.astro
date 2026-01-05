@@ -1,19 +1,27 @@
 ---
 import Logo from "@/components/Logo.astro";
 import ProjectCard from "@/components/ProjectCard.astro";
-import { projects } from "@/data/project";
+import { getProjects } from "@/lib/projects";
 import { profile } from "@/data/profile";
 import StoryScroll from "@/components/StoryScroll.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 type Project = {
+  id: string;
   name: string;
   badge: string;
   tagline: string;
   description: string;
   highlights: string[];
   stack: string[];
-  repo: string;
+  links: {
+    repo?: string;
+    demo?: string;
+    [key: string]: string | undefined;
+  };
+  status: 'active' | 'archived' | 'draft';
+  featured: boolean;
+  sort_order: number;
 };
 
 type ExperienceItem = {
@@ -28,6 +36,7 @@ const stackChips = [
   "TypeScript", ".NET / C#", "SQL"
 ];
 
+const projects = await getProjects();
 const topExp = (profile.experience ?? []) as ExperienceItem[];
 const expSummary = topExp.slice(0, 4).map(e => `${e.company}`).join(" • ");
 ---
@@ -116,67 +125,34 @@ const expSummary = topExp.slice(0, 4).map(e => `${e.company}`).join(" • ");
           <span class="opacity-70">claras y memorables.</span>
         </h1>
 
-        <p class="mt-5 text-lg opacity-80 sm:text-xl">
-          Performance primero, UI limpia y datos con Supabase.
-          Experiencia en fintech/sector financiero: {expSummary}.
-        </p>
-
         <div class="mt-8 flex flex-wrap gap-3">
-          <a href="#work"
-             class="rounded-full px-5 py-2.5 text-sm text-white dark:text-zinc-950"
-             style="background: linear-gradient(90deg, rgb(var(--a1)), rgb(var(--a2)));">
+          <a href="#work" class="btn-primary">
             Ver proyectos
           </a>
-          <a href="#contact"
-             class="rounded-full border px-5 py-2.5 text-sm"
-             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
+          <a href="#contact" class="btn-secondary">
             Contacto
           </a>
-          <a href="/blog"
-             class="rounded-full border px-5 py-2.5 text-sm"
-             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
+          <a href="/blog" class="btn-secondary">
             Blog
           </a>
         </div>
-      </div>
-
-      <div class="mt-14 grid gap-6 sm:grid-cols-2">
-        <div data-reveal class="reveal rounded-2xl border p-6"
-             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
-          <p class="text-sm opacity-70">Enfoque</p>
-          <h2 class="mt-2 text-2xl font-semibold tracking-tight">Diseño + ingeniería</h2>
-          <p class="mt-2 text-sm opacity-80">
-            Micro-interacciones sobrias, accesibilidad y velocidad real (LCP/CLS).
-          </p>
-        </div>
-
-        <div class="relative rounded-2xl border p-6"
-             style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.6);">
-          <div class="absolute inset-0 rounded-2xl opacity-70"
-               style="background: linear-gradient(180deg, rgb(var(--a3)/0.14), transparent);"></div>
-
-          <div class="relative">
-            <p class="text-sm opacity-70">Preview</p>
-            <div class="mt-4 overflow-hidden rounded-xl border"
-                 style="border-color: rgb(var(--border)); background: rgb(var(--card)/0.55);">
-              <div class="h-9 border-b" style="border-color: rgb(var(--border));"></div>
-              <div class="p-6">
-                <div data-parallax="0.10" class="will-change-transform">
-                  <div class="h-40 rounded-xl border"
-                       style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.6);"></div>
-                  <p class="mt-3 text-xs opacity-70">Parallax sutil + reveal</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 
   <!-- WORK -->
   <section id="work" class="mx-auto max-w-6xl px-4 py-16">
+    <div data-reveal class="reveal">
+      <h2 class="text-3xl font-semibold tracking-tight">Proyectos</h2>
+      <p class="mt-2 text-sm opacity-80">Productos que he construido con enfoque en performance y experiencia.</p>
+    </div>
+
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard {...project} />
+      ))}
+    </div>
+
     <StoryScroll />
   </section>
 
@@ -268,11 +244,6 @@ const expSummary = topExp.slice(0, 4).map(e => `${e.company}`).join(" • ");
              target="_blank" rel="noreferrer noopener">
             GitHub
           </a>
-        </div>
-
-        <div class="mt-6 rounded-xl border p-4 text-sm opacity-80"
-             style="border-color: rgb(var(--border)); background: rgb(var(--bg)/0.35);">
-          <p class="font-medium">Disponible para proyectos</p>
         </div>
       </div>
     </div>
