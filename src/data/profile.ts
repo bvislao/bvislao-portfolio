@@ -1,21 +1,36 @@
 export const profile = {
   name: "Bryan Vislao Chavez",
-  role: "Software Engineer",
+  role: "Full-stack Software Engineer",
   location: "Lima, Perú",
   email: "bvislao95@gmail.com",
   linkedin: "https://www.linkedin.com/in/bvislaochavez/",
   github: "https://github.com/bvislao",
+  youtube: "https://youtube.com/@thejavizho",
 
-  headline: "Software Engineer enfocado en web, producto y sistemas financieros.",
+  headline: "Full-stack software engineer with 8+ years shipping production software. Building the product and financial core of Vivela.lat.",
 
-  skills: ["Python", "SQL", "Microsoft Excel", ".NET / C#"],
-  languages: ["Español (Professional Working)"],
+  coreStack: ["Java", "Spring Boot", "TypeScript", "React", "Next.js", "Node.js", "PostgreSQL"],
+
+  otherStack: [
+    "JavaScript", ".NET", "C#", "Python", "NestJS", "Express",
+    "Vue.js", "Redux", "Tailwind CSS", "Sass",
+    "MySQL", "SQL Server", "Oracle",
+    "Docker", "Git", "AWS"
+  ],
+
+  skills: [
+    "Java/Spring Boot", "React/TypeScript/Next.js",
+    "Domain-Driven Design", "Clean Architecture",
+    "Financial Systems", "PostgreSQL", "Node.js"
+  ],
+
+  languages: ["Español (Native)", "English (Professional)"],
   certifications: ["SCRUM FOUNDATION PROFESSIONAL CERTIFICATE"],
 
   experience: [
     {
-      company: "Vívela",
-      title: "Middle Software Developer",
+      company: "Vivela.lat",
+      title: "Full-stack Software Engineer",
       period: "Mar 2023 — Present",
       place: "Lima, Perú",
     },
@@ -31,36 +46,6 @@ export const profile = {
       period: "Ene 2020 — Jun 2022",
       place: "Lima, Perú",
     },
-    {
-      company: "Stefanini Brasil",
-      title: ".NET Developer (Cliente Graña y Montero / Cumbra Perú)",
-      period: "Jul 2019 — Ene 2020",
-      place: "Lima, Perú",
-    },
-    {
-      company: "Experis IT Perú",
-      title: ".NET Developer (Cliente Scotiabank Perú)",
-      period: "Ene 2019 — Jul 2019",
-      place: "Lima, Perú",
-    },
-    {
-      company: "FINANCIERA CREDINKA",
-      title: "Analista Programador de Sistemas",
-      period: "Feb 2017 — Ene 2019",
-      place: "Lima, Perú",
-    },
-    {
-      company: "EAFC Maquisistema",
-      title: "Analista Programador",
-      period: "Ene 2016 — Feb 2017",
-      place: "Lima, Perú",
-    },
-    {
-      company: "CREDINKA",
-      title: "Analista Programador",
-      period: "Feb 2015 — Dic 2015",
-      place: "Lima, Perú",
-    },
   ],
 
   education: [
@@ -73,11 +58,6 @@ export const profile = {
       org: "Instituto SISE",
       program: "Computación & Informática (Software & Sistemas)",
       year: "2012 — 2016",
-    },
-    {
-      org: "CIBERTEC",
-      program: "Curso de Transact-SQL Server",
-      year: "2015",
     },
   ],
 };
