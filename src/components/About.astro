@@ -1,0 +1,32 @@
+---
+export interface Props {
+  bio: string;
+  skills: string[];
+}
+const { bio, skills } = Astro.props;
+---
+
+<section id="about" class="reveal" style="padding: 5rem 0;">
+  <p class="section-label">
+    <span class="code-tag" style="color: rgb(var(--accent));">//</span> Sobre m\u00ED
+  </p>
+  <div class="p-6 sm:p-8 rounded-xl" style="background: rgb(var(--card)); border: 1px solid rgb(var(--border));">
+    <p class="text-base leading-relaxed" style="color: rgb(var(--muted));">
+      {bio}
+    </p>
+    <hr class="my-6" style="border-color: rgb(var(--border));">
+    <div>
+      <p class="code-tag text-xs font-medium mb-3" style="color: rgb(var(--muted));">
+        <span style="color: rgb(var(--accent));">const</span> stack = [
+      </p>
+      <div class="flex flex-wrap gap-2">
+        {skills.map(s => (
+          <span class="code-tag px-3 py-1.5 text-sm rounded-md" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">
+            &apos;{s}&apos;
+          </span>
+        ))}
+      </div>
+      <p class="code-tag text-xs font-medium mt-2" style="color: rgb(var(--muted));">];</p>
+    </div>
+  </div>
+</section>

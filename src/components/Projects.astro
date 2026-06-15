@@ -1,0 +1,38 @@
+---
+export interface Project {
+  name: string;
+  desc: string;
+  tags: string[];
+  url: string;
+}
+export interface Props { projects: Project[]; }
+const { projects } = Astro.props;
+---
+
+<section id="work" class="reveal" style="padding: 5rem 0;">
+  <p class="section-label">
+    <span class="code-tag" style="color: rgb(var(--accent));">#</span> Trabajo seleccionado
+  </p>
+  <div class="grid sm:grid-cols-2 gap-5">
+    {projects.map((p, i) => (
+      <a href={p.url} target="_blank" rel="noreferrer noopener"
+         class="project-card block p-6 rounded-xl" style="background: rgb(var(--card));">
+        <div class="w-full h-36 rounded-lg mb-4 flex items-center justify-center code-tag" style="background: rgb(var(--accent) / 0.05);">
+          <div class="text-center">
+            <p class="text-xs font-medium mb-2" style="color: rgb(var(--muted));">
+              <span style="color: rgb(var(--accent));">&gt;_</span> project.{p.name}.run<span style="color: rgb(var(--accent));">()</span>
+            </p>
+            <span class="text-5xl font-bold" style="color: rgb(var(--accent) / 0.2); font-family: 'JetBrains Mono', monospace;">{p.name.charAt(0).toUpperCase()}</span>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-1.5 mb-2">
+          {p.tags.map(t => (
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#{t.toLowerCase()}</span>
+          ))}
+        </div>
+        <h3 class="font-semibold text-sm mb-1.5" style="color: rgb(var(--fg));">{p.name}</h3>
+        <p class="text-sm leading-relaxed" style="color: rgb(var(--muted));">{p.desc}</p>
+      </a>
+    ))}
+  </div>
+</section>

@@ -1,33 +1,60 @@
 ---
-import "../styles/global.css";
-import Footer from "../components/Footer.astro";
+import "@/styles/global.css";
+import { ViewTransitions } from "astro:transitions";
 
 type Props = {
   title?: string;
   description?: string;
-  canonical?: string;
 };
 
-const { title = "bvislaoch_", description = "Portafolio", canonical }: Props = Astro.props;
-const canonicalUrl = canonical ?? Astro.url.href;
+const { title = "Bryan Vislao — Full-stack Developer",
+        description = "Full-stack developer con 10+ años de experiencia en sistemas financieros." } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" class="dark">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
-
-    <script src="../../public/scripts/theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <ViewTransitions />
   </head>
+  <body>
+    <slot />
 
-  <body class="min-h-screen">
-    <main class="min-h-[70vh]">
-      <slot />
-    </main>
-    <Footer />
+    <script is:inline>
+    (function() {
+      const stored = localStorage.getItem("theme");
+      if (stored === "light") document.documentElement.classList.remove("dark");
+    })();
+    </script>
   </body>
 </html>
+
+<script>
+const html = document.documentElement;
+const stored = localStorage.getItem("theme");
+if (stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)) html.classList.add("dark");
+else html.classList.remove("dark");
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-theme-toggle]");
+  if (!btn) return;
+  html.classList.toggle("dark");
+  localStorage.setItem("theme", html.classList.contains("dark") ? "dark" : "light");
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add("visible");
+  });
+}, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+});
+</script>

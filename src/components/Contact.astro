@@ -1,0 +1,40 @@
+---
+export interface Props {
+  email: string;
+  phone: string;
+  github: string;
+  linkedin: string;
+}
+const { email, phone, github, linkedin } = Astro.props;
+---
+
+<section id="contact" class="reveal" style="padding: 5rem 0 6rem;">
+  <p class="section-label">
+    <span class="code-tag" style="color: rgb(var(--accent));">//</span> Contacto
+  </p>
+  <div class="p-8 sm:p-10 rounded-xl glow" style="background: rgb(var(--card)); border: 1px solid rgb(var(--border));">
+    <p class="code-tag text-xl sm:text-2xl font-semibold mb-2" style="color: rgb(var(--fg));">
+      <span style="color: rgb(var(--accent));">$</span> contact --start
+    </p>
+    <p class="text-sm mb-6" style="color: rgb(var(--muted));">
+      Si buscas a alguien que entienda tanto el negocio como la t\u00E9cnica, hablemos.
+    </p>
+    <a href={`mailto:${email}`} class="btn btn-primary inline-flex items-center gap-2 mb-6">
+      <span class="code-tag text-xs" style="color: rgb(var(--accent)); opacity: 0.6;">&gt;</span>
+      Enviar correo
+    </a>
+
+    <hr style="border-color: rgb(var(--border)); margin-bottom: 1.5rem;">
+
+    <div class="flex flex-wrap gap-x-6 gap-y-3 text-sm code-tag" style="color: rgb(var(--muted));">
+      <a href={`mailto:${email}`} class="link-underline" style="color: rgb(var(--muted));">{email}</a>
+      <a href={github} target="_blank" rel="noreferrer noopener" class="link-underline" style="color: rgb(var(--muted));">github.com/bvislao</a>
+      <a href={linkedin} target="_blank" rel="noreferrer noopener" class="link-underline" style="color: rgb(var(--muted));">linkedin.com/in/bvislaochavez</a>
+      <span style="color: rgb(var(--muted));">{phone}</span>
+    </div>
+
+    <p class="code-tag text-xs mt-8" style="color: rgb(var(--muted) / 0.5);">
+      <span style="color: rgb(var(--accent));">//</span> &copy; {new Date().getFullYear()} Bryan Vislao
+    </p>
+  </div>
+</section>
