@@ -8,12 +8,6 @@ import Contact from "@/components/Contact.astro";
 
 const bio = "Soy un Desarrollador Fullstack con m\u00E1s de 10 a\u00F1os de experiencia dise\u00F1ando, implementando y optimizando soluciones tecnol\u00F3gicas escalables, principalmente dentro del sector financiero y bancario (Scotiabank, Financiera QAPAQ, Financiera Credinka). Me he especializado fuertemente en el ecosistema Microsoft (.NET Core, ASP.NET MVC, C#) y en la gesti\u00F3n de bases de datos relacionales complejas (SQL Server, Oracle). Mi enfoque va m\u00E1s all\u00E1 de escribir c\u00F3digo; me especializo en interpretar requerimientos de negocio, definir arquitecturas de sistemas y garantizar que las aplicaciones financieras cumplan con los m\u00E1s altos est\u00E1ndares de rendimiento y seguridad.";
 
-const skills = [
-  "C# / .NET Core", "ASP.NET MVC", "SQL Server",
-  "Oracle PL/SQL", "Angular", "React",
-  "WCF / Web API", "TypeScript", "Azure DevOps"
-];
-
 const projects = [
   {
     name: "Canal Digital MAF",
@@ -47,12 +41,83 @@ const projects = [
   <main class="container-page">
     <Hero
       name="Bryan Vislao"
-      role="Fullstack .NET Developer"
-      tagline="M\u00E1s de 10 a\u00F1os construyendo software financiero escalable con .NET, SQL Server y arquitecturas limpias. Experiencia en banca, fintech y retail."
+      role="Fullstack Developer"
+      tagline="8+ a\u00F1os en TI (sector financiero). Especialista en diseno y consumo de APIs REST/WCF, arquitecturas distribuidas y microservicios con Java (Spring Boot) y .NET (C#, .NET Core). Conecto frontends Angular/React con backends robustos. Scrum certified. Optimizo bases SQL/Oracle y automatizo workflows cr\u00EDticos de alta disponibilidad."
       cta="Ver proyectos"
     />
-    <About bio={bio} skills={skills} />
+
+    <About bio={bio} />
+
+    <section class="reveal" style="padding: 5rem 0;">
+      <p class="section-label">
+        <span class="code-tag" style="color: rgb(var(--accent));">//</span> GitHub Stats
+      </p>
+      <div class="flex flex-col items-center gap-4">
+        <div class="flex flex-wrap justify-center gap-4">
+          <img height="165" src="https://github-readme-stats.vercel.app/api?username=bvislao&show_icons=true&include_all_commits=true&count_private=true&hide_border=true&rank_icon=github&theme=tokyonight" alt="GitHub Stats" />
+          <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs?username=bvislao&layout=compact&langs_count=8&hide_border=true&theme=tokyonight" alt="Top Languages" />
+        </div>
+        <img src="https://github-readme-streak-stats.demolab.com?user=bvislao&hide_border=true&theme=tokyonight" alt="GitHub Streak" />
+      </div>
+    </section>
+
     <Projects projects={projects} />
+
+    <section class="reveal" style="padding: 5rem 0;">
+      <p class="section-label">
+        <span class="code-tag" style="color: rgb(var(--accent));">#</span> Proyectos personales
+      </p>
+      <div class="grid sm:grid-cols-2 gap-5">
+        <a href="https://github.com/bvislao/antiphishing-peru-ext" target="_blank" rel="noreferrer noopener"
+           class="project-card block p-6 rounded-xl" style="background: rgb(var(--card));">
+          <div class="flex items-center gap-2.5 mb-3">
+            <span class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent)); font-family: 'JetBrains Mono', monospace;">AP</span>
+            <h3 class="font-semibold text-sm" style="color: rgb(var(--fg));">antiphishing-peru-ext</h3>
+          </div>
+          <p class="text-sm leading-relaxed mb-3" style="color: rgb(var(--muted));">
+            Extensi\u00F3n anti-phishing publicada en Chrome Web Store y Firefox. Detecta y alerta sobre sitios fraudulentos que suplantan a bancos peruanos.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#javascript</span>
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#security</span>
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#chrome-extension</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/bvislao/payki" target="_blank" rel="noreferrer noopener"
+           class="project-card block p-6 rounded-xl" style="background: rgb(var(--card));">
+          <div class="flex items-center gap-2.5 mb-3">
+            <span class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent)); font-family: 'JetBrains Mono', monospace;">PK</span>
+            <h3 class="font-semibold text-sm" style="color: rgb(var(--fg));">PAYKI</h3>
+          </div>
+          <p class="text-sm leading-relaxed mb-3" style="color: rgb(var(--muted));">
+            Prototipo de sistema de pagos para transporte p\u00FAblico en Per\u00FA. Procesa transacciones en tiempo real con arquitectura modular.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#typescript</span>
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#react</span>
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#node</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/bvislao/aliases-git" target="_blank" rel="noreferrer noopener"
+           class="project-card block p-6 rounded-xl" style="background: rgb(var(--card));">
+          <div class="flex items-center gap-2.5 mb-3">
+            <span class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent)); font-family: 'JetBrains Mono', monospace;">GA</span>
+            <h3 class="font-semibold text-sm" style="color: rgb(var(--fg));">aliases-git</h3>
+          </div>
+          <p class="text-sm leading-relaxed mb-3" style="color: rgb(var(--muted));">
+            Tutorial pr\u00E1ctico de aliases de Git y mejores pr\u00E1cticas para optimizar el flujo de trabajo diario en l\u00EDnea de comandos.
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#git</span>
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#shell</span>
+            <span class="code-tag text-xs px-2 py-0.5 rounded" style="background: rgb(var(--accent) / 0.1); color: rgb(var(--accent));">#productivity</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <Contact
       email="bvislao95@gmail.com"
       phone="+51 930 712 645"
