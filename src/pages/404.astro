@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="Página no encontrada — Bryan Vislao Chavez"
+  description="La página que buscas no existe o fue movida."
+>
+  <main
+    id="contenido"
+    class="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center gap-6 px-6 text-center"
+  >
+    <p class="text-7xl font-semibold tracking-tight text-[var(--accent)]">404</p>
+
+    <div class="space-y-2">
+      <h1 class="text-2xl font-semibold tracking-tight">Esta página no existe</h1>
+      <p class="text-[var(--text-muted)]">
+        El enlace puede estar roto o la página fue movida. El CV y el resto del
+        portafolio siguen donde los dejé.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-contrast)] transition-transform hover:scale-[1.03]"
+      >
+        <Icon name="rocket" class="text-base" />
+        Ir al portafolio
+      </a>
+      <a
+        href="/#contacto"
+        class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+      >
+        <Icon name="mail" class="text-base" />
+        Contacto
+      </a>
+    </div>
+  </main>
+</BaseLayout>

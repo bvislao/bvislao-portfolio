@@ -1,0 +1,32 @@
+---
+/**
+ * Renders a sprite icon: <use href="/icons/sprite.svg#i-name" />.
+ *
+ * `solid` switches to fill-only rendering for brand marks (simple-icons
+ * paths are single solid glyphs); the default stroke rendering suits the
+ * Lucide-style UI glyphs. Any extra attributes (`data-*`, `aria-*`, event
+ * hooks) are forwarded to the root <svg>.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'svg'> & {
+  name: string;
+  solid?: boolean;
+  title?: string;
+};
+
+const { name, solid, title, class: className, ...rest } = Astro.props;
+const filled = solid ?? name.startsWith('brand-');
+---
+
+<svg
+  class:list={['icon', { 'icon-brand': filled }, className]}
+  viewBox="0 0 24 24"
+  aria-hidden={title ? undefined : 'true'}
+  role={title ? 'img' : undefined}
+  focusable="false"
+  {...rest}
+>
+  {title && <title>{title}</title>}
+  <use href={`/icons/sprite.svg#i-${name}`} />
+</svg>

@@ -1,0 +1,262 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                       */
+/*                                                                     */
+/* The palette is driven by a single hue (--hue) so the whole UI can be */
+/* re-themed by changing one value. `light-dark()` is used instead of a  */
+/* `.dark` class so the browser resolves colours at paint time and we    */
+/* avoid a flash of the wrong theme (see the blocking script in the     */
+/* <head> that sets the `color-scheme` before first paint).             */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --hue: 158;
+  --radius-card: 0.875rem;
+
+  --color-accent-50: oklch(0.97 0.03 var(--hue));
+  --color-accent-100: oklch(0.93 0.06 var(--hue));
+  --color-accent-300: oklch(0.83 0.12 var(--hue));
+  --color-accent-500: oklch(0.68 0.16 var(--hue));
+  --color-accent-600: oklch(0.58 0.15 var(--hue));
+  --color-accent-700: oklch(0.48 0.12 var(--hue));
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respect users who ask the OS to reduce motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --surface: oklch(1 0 0);
+    --surface-raised: oklch(0.985 0.002 var(--hue));
+    --surface-sunken: oklch(0.965 0.004 var(--hue));
+    --border: oklch(0.905 0.006 var(--hue));
+    --border-strong: oklch(0.83 0.01 var(--hue));
+    --text: oklch(0.24 0.02 var(--hue));
+    /* Lightness values are solved so every one of these clears WCAG AA
+       (>= 4.5:1) against --surface, not chosen by eye. See the contrast
+       audit in scripts/smoke.mjs. */
+    --text-muted: oklch(0.5 0.02 var(--hue));
+    --text-faint: oklch(0.545 0.015 var(--hue));
+    --accent: oklch(0.52 0.14 var(--hue));
+    --accent-contrast: oklch(1 0 0);
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --surface: oklch(0.19 0.012 var(--hue));
+    --surface-raised: oklch(0.23 0.014 var(--hue));
+    --surface-sunken: oklch(0.16 0.01 var(--hue));
+    --border: oklch(0.31 0.015 var(--hue));
+    --border-strong: oklch(0.42 0.02 var(--hue));
+    --text: oklch(0.95 0.008 var(--hue));
+    --text-muted: oklch(0.75 0.015 var(--hue));
+    --text-faint: oklch(0.63 0.015 var(--hue));
+    --accent: oklch(0.78 0.15 var(--hue));
+    --accent-contrast: oklch(0.16 0.02 var(--hue));
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Anchor targets clear the fixed header. */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* A single, consistent focus ring across the whole page. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  /* Themed scrollbar, ignored by browsers that don't support it. */
+  @supports (scrollbar-color: auto) {
+    html {
+      scrollbar-color: var(--border-strong) transparent;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+@layer components {
+  .surface-card {
+    background-color: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+  }
+
+  .hairline {
+    border-color: var(--border);
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
+
+  .text-faint {
+    color: var(--text-faint);
+  }
+
+  .text-accent {
+    color: var(--accent);
+  }
+
+  /* Native <details> disclosure, styled to match the theme and animated
+     via grid-template-rows so no max-height magic numbers are needed. */
+  .disclosure > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .disclosure[open] .disclosure-chevron {
+    rotate: 180deg;
+  }
+
+  .disclosure > .disclosure-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+  }
+
+  .disclosure[open] > .disclosure-body {
+    grid-template-rows: 1fr;
+  }
+
+  .disclosure > .disclosure-body > * {
+    overflow: hidden;
+  }
+
+  /* ------------------------------------------------------------------
+   * Sprite
+   *
+   * These MUST live inside @layer components. Unlayered rules outrank every
+   * layered rule in the cascade, so an unlayered `.icon { display: inline-block }`
+   * would beat Tailwind's layered `.hidden { display: none }` and leave
+   * inactive theme glyphs stacked on top of each other.
+   * ---------------------------------------------------------------- */
+
+  .icon {
+    display: inline-block;
+    flex: none;
+    width: 1em;
+    height: 1em;
+    fill: none;
+    vertical-align: -0.125em;
+  }
+
+  /* Brand glyphs are solid paths and must override the stroke defaults. */
+  .icon-brand {
+    fill: currentColor;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Print: the page doubles as a CV                                    */
+/* ------------------------------------------------------------------ */
+
+@media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+
+  :root {
+    --surface: #fff;
+    --surface-raised: #fff;
+    --surface-sunken: #fff;
+    --border: #d4d4d8;
+    --text: #18181b;
+    --text-muted: #52525b;
+    --text-faint: #71717a;
+    --accent: #0f766e;
+  }
+
+  html {
+    scroll-padding-top: 0;
+  }
+
+  body {
+    background: #fff;
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+
+  /* Flatten every interactive affordance: nothing on paper is clickable. */
+  .print-hidden,
+  [data-print='hide'] {
+    display: none !important;
+  }
+
+  /* Print the destination of links, otherwise the CV loses its sources. */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+    color: #71717a;
+    word-break: break-all;
+  }
+
+  /* Suppress the self-link expansion for anchors. */
+  a[href^='#']::after {
+    content: '';
+  }
+
+  section,
+  article {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}

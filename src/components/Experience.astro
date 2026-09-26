@@ -1,0 +1,321 @@
+---
+import Icon from './Icon.astro';
+import { experience, duration, formatMonth } from '../data/experience';
+import { iconLabel } from '../data/icons';
+
+/** Technologies that get a filter pill, in order of relevance. */
+const FILTERS = [
+  { id: 'typescript', label: 'TypeScript' },
+  { id: 'react', label: 'React' },
+  { id: 'nextdotjs', label: 'Next.js' },
+  { id: 'angular', label: 'Angular' },
+  { id: 'nodedotjs', label: 'Node.js' },
+  { id: 'nestjs', label: 'NestJS' },
+  { id: 'dotnet', label: '.NET' },
+  { id: 'spring', label: 'Spring Boot' },
+  { id: 'brand-java', label: 'Java' },
+  { id: 'mysql', label: 'MySQL' },
+  { id: 'postgresql', label: 'PostgreSQL' },
+  { id: 'brand-sqlserver', label: 'SQL Server' },
+  { id: 'docker', label: 'Docker' },
+  { id: 'brand-aws', label: 'AWS' },
+  { id: 'kubernetes', label: 'Kubernetes' },
+  { id: 'claudecode', label: 'IA' },
+] as const;
+
+const roles = experience.map((role) => ({
+  ...role,
+  /** Ids of the filters this role matches. */
+  filters: FILTERS.filter((f) => role.stack.includes(f.id)).map((f) => f.id),
+}));
+---
+
+<section id="experiencia" class="scroll-mt-24" aria-labelledby="experiencia-heading">
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h2
+        id="experiencia-heading"
+        class="flex items-center gap-2 text-xl font-semibold tracking-tight"
+      >
+        <Icon name="briefcase" class="text-xl text-[var(--accent)]" />
+        Experiencia
+      </h2>
+      <p class="mt-1 text-sm text-[var(--text-muted)]">
+        {experience.length} roles en {new Set(experience.map((r) => r.client ?? r.company)).size}
+        empresas
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="print-hidden inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text)]"
+      data-expand-all
+    >
+      <Icon name="chevron-down" class="text-sm" data-expand-icon />
+      <span data-expand-label>Ver todo</span>
+    </button>
+  </header>
+
+  <!-- Technology filter -->
+  <div class="print-hidden mb-6" role="group" aria-label="Filtrar por tecnología">
+    <div class="flex flex-wrap gap-1.5" data-filters>
+      <button
+        type="button"
+        class="filter-chip is-active"
+        data-filter="all"
+        aria-pressed="true"
+      >
+        Todas
+      </button>
+      {
+        FILTERS.map((f) => (
+          <button type="button" class="filter-chip" data-filter={f.id} aria-pressed="false">
+            {f.label}
+          </button>
+        ))
+      }
+    </div>
+    <p class="mt-2 text-xs text-[var(--text-faint)]" data-filter-status aria-live="polite" />
+  </div>
+
+  <!-- Timeline -->
+  <ol class="relative space-y-3" data-timeline>
+    <span
+      class="absolute top-2 bottom-2 left-[0.4375rem] w-px bg-[var(--border)] print:hidden"
+      aria-hidden="true"
+    >
+    </span>
+
+    {
+      roles.map((role) => (
+        <li
+          class="relative pl-8"
+          data-role={role.id}
+          data-filters-match={role.filters.join(' ')}
+        >
+          <span
+            class="absolute top-6 left-0 size-3.5 rounded-full border-2 border-[var(--surface)] bg-[var(--accent)] print:hidden"
+            aria-hidden="true"
+          />
+          {
+            role.current && (
+              <span
+                class="absolute top-6 left-0 size-3.5 animate-ping rounded-full bg-[var(--accent)] opacity-40 print:hidden"
+                aria-hidden="true"
+              />
+            )
+          }
+
+          <details
+            class="disclosure surface-card group/card overflow-hidden transition-colors open:border-[var(--border-strong)]"
+            open={role.current}
+            data-details
+          >
+            <summary class="flex items-start gap-3 p-4 hover:bg-[var(--surface-sunken)]/50">
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <h3 class="text-base font-semibold">{role.position}</h3>
+                  {role.current && (
+                    <span class="rounded-full bg-[var(--accent)] px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide text-[var(--accent-contrast)] uppercase">
+                      Actual
+                    </span>
+                  )}
+                </div>
+
+                <p class="mt-0.5 text-sm text-[var(--text-muted)]">
+                  {role.company}
+                  {
+                    role.client && (
+                      <span class="text-[var(--text-faint)]"> · {role.client}</span>
+                    )
+                  }
+                </p>
+
+                <p class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--text-faint)]">
+                  <span class="inline-flex items-center gap-1 tabular-nums">
+                    <time datetime={role.start}>{formatMonth(role.start)}</time>
+                    <span aria-hidden="true">—</span>
+                    {role.end ? (
+                      <time datetime={role.end}>{formatMonth(role.end)}</time>
+                    ) : (
+                      <span>actualidad</span>
+                    )}
+                  </span>
+                  <span class="inline-flex items-center gap-1">
+                    <Icon name="clock" class="text-sm" />
+                    {duration(role.start, role.end)}
+                  </span>
+                  <span class="inline-flex items-center gap-1">
+                    <Icon name="map-pin" class="text-sm" />
+                    {role.location} · {role.mode}
+                  </span>
+                </p>
+              </div>
+
+              <span
+                class="mt-1 flex size-7 flex-none items-center justify-center rounded-full text-[var(--text-faint)] transition-colors group-open/card:bg-[var(--surface-sunken)]"
+                data-chevron
+              >
+                <Icon name="chevron-down" class="disclosure-chevron text-base transition-transform duration-300" />
+              </span>
+            </summary>
+
+            <div class="disclosure-body">
+              <div class="space-y-4 border-t border-[var(--border)] p-4">
+                <p class="text-sm leading-relaxed text-[var(--text-muted)]">
+                  {role.summary}
+                </p>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                  {
+                    role.responsibilities.length > 0 && (
+                      <div>
+                        <h4 class="mb-2 text-xs font-semibold tracking-wide text-[var(--text-faint)] uppercase">
+                          Responsabilidades
+                        </h4>
+                        <ul class="space-y-1.5">
+                          {role.responsibilities.map((r) => (
+                            <li class="flex gap-2 text-sm leading-relaxed text-[var(--text-muted)]">
+                              <span class="mt-2 size-1 flex-none rounded-full bg-[var(--accent)]" />
+                              <span>{r}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  }
+
+                  {
+                    role.achievements.length > 0 && (
+                      <div>
+                        <h4 class="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[var(--text-faint)] uppercase">
+                          <Icon name="trending-up" class="text-sm text-[var(--accent)]" />
+                          Logros
+                        </h4>
+                        <ul class="space-y-1.5">
+                          {role.achievements.map((a) => (
+                            <li class="flex gap-2 text-sm leading-relaxed text-[var(--text-muted)]">
+                              <Icon
+                                name="check"
+                                class="mt-1 flex-none text-sm text-[var(--accent)]"
+                              />
+                              <span>{a}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  }
+                </div>
+
+                {
+                  role.stack.length > 0 && (
+                    <div class="border-t border-[var(--border)] pt-3">
+                      <h4 class="sr-only">Tecnologías</h4>
+                      <ul class="flex flex-wrap gap-1.5" aria-label={`Tecnologías en ${role.company}`}>
+                        {role.stack.map((tech) => (
+                          <li class="flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--surface-sunken)] px-2 py-1 text-xs text-[var(--text-muted)]">
+                            <Icon name={tech} class="text-sm text-[var(--text-faint)]" title={iconLabel(tech)} />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+          </details>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .filter-chip {
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background-color: var(--surface-raised);
+    transition:
+      color 0.15s,
+      border-color 0.15s,
+      background-color 0.15s;
+  }
+
+  .filter-chip:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .filter-chip.is-active {
+    border-color: transparent;
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  [data-role][hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  /* --- Technology filter ---------------------------------------- */
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const roleItems = [...document.querySelectorAll<HTMLElement>('[data-role]')];
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const value = chip.dataset.filter ?? 'all';
+
+      chips.forEach((c) => {
+        const active = c === chip;
+        c.classList.toggle('is-active', active);
+        c.setAttribute('aria-pressed', String(active));
+      });
+
+      let shown = 0;
+      roleItems.forEach((item) => {
+        const matches = value === 'all' || item.dataset.filtersMatch?.split(' ').includes(value);
+        item.hidden = !matches;
+        if (matches) shown += 1;
+      });
+
+      if (status) {
+        status.textContent =
+          value === 'all'
+            ? ''
+            : `Mostrando ${shown} ${shown === 1 ? 'rol' : 'roles'} con ${chip.textContent?.trim()}`;
+      }
+    });
+  });
+
+  /* --- Expand / collapse all ------------------------------------ */
+  const expandBtn = document.querySelector<HTMLButtonElement>('[data-expand-all]');
+  const expandLabel = expandBtn?.querySelector<HTMLElement>('[data-expand-label]');
+  const expandIcon = expandBtn?.querySelector<HTMLElement>('[data-expand-icon]');
+  const allDetails = [...document.querySelectorAll<HTMLDetailsElement>('[data-details]')];
+
+  expandBtn?.addEventListener('click', () => {
+    // If anything is closed, treat the action as "open everything".
+    const shouldOpen = allDetails.some((d) => !d.open);
+    allDetails.forEach((d) => {
+      d.open = shouldOpen;
+    });
+    if (expandLabel) expandLabel.textContent = shouldOpen ? 'Ver menos' : 'Ver todo';
+    expandIcon?.classList.toggle('rotate-180', shouldOpen);
+  });
+
+  // Keep the button label honest when the user opens a card manually.
+  allDetails.forEach((d) => {
+    d.addEventListener('toggle', () => {
+      const allOpen = allDetails.every((x) => x.open);
+      if (expandLabel) expandLabel.textContent = allOpen ? 'Ver menos' : 'Ver todo';
+      expandIcon?.classList.toggle('rotate-180', allOpen);
+    });
+  });
+</script>

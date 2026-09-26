@@ -1,0 +1,132 @@
+---
+import Icon from './Icon.astro';
+import { projects } from '../data/projects';
+import { iconLabel } from '../data/icons';
+---
+
+<section id="proyectos" class="scroll-mt-24" aria-labelledby="proyectos-heading">
+  <header class="mb-6">
+    <h2
+      id="proyectos-heading"
+      class="flex items-center gap-2 text-xl font-semibold tracking-tight"
+    >
+      <Icon name="rocket" class="text-xl text-[var(--accent)]" />
+      Proyectos
+    </h2>
+    <p class="mt-1 text-sm text-[var(--text-muted)]">
+      Casos de estudio: el problema, el enfoque y el resultado medible.
+    </p>
+  </header>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    {
+      projects.map((project, index) => {
+        const hasLinks = project.links.some((l) => l.url);
+        return (
+          <article
+            class="disclosure surface-card group/proj flex flex-col overflow-hidden"
+            data-project
+          >
+            <details open={index === 0} data-details>
+              <summary class="flex flex-col gap-3 p-5">
+                <div class="flex items-start justify-between gap-3">
+                  <span class="flex size-10 flex-none items-center justify-center rounded-xl bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-xl text-[var(--accent)]">
+                    <Icon name={project.icon} class="text-xl" />
+                  </span>
+
+                  {project.metric && (
+                    <div class="text-right">
+                      <p class="text-xl leading-none font-semibold text-[var(--accent)] tabular-nums">
+                        {project.metric.value}
+                      </p>
+                      <p class="mt-1 text-[0.65rem] tracking-wide text-[var(--text-faint)] uppercase">
+                        {project.metric.label}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <h3 class="text-base font-semibold text-balance">{project.title}</h3>
+                  <p class="mt-1 text-sm leading-relaxed text-[var(--text-muted)] text-pretty">
+                    {project.tagline}
+                  </p>
+                </div>
+
+                <span class="mt-auto inline-flex items-center gap-1 text-xs font-medium text-[var(--text-faint)]">
+                  {hasLinks ? 'Ver detalle' : 'Leer caso'}
+                  <Icon
+                    name="chevron-down"
+                    class="disclosure-chevron transition-transform duration-300"
+                  />
+                </span>
+              </summary>
+
+              <div class="disclosure-body">
+                <div class="space-y-3 border-t border-[var(--border)] p-5">
+                  <dl class="space-y-3">
+                    {[
+                      { term: 'Problema', desc: project.problem, icon: 'target' },
+                      { term: 'Enfoque', desc: project.approach, icon: 'workflow' },
+                      { term: 'Resultado', desc: project.outcome, icon: 'trending-up' },
+                    ].map((row) => (
+                      <div>
+                        <dt class="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[var(--text-faint)] uppercase">
+                          <Icon name={row.icon} class="text-sm text-[var(--accent)]" />
+                          {row.term}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-relaxed text-[var(--text-muted)]">
+                          {row.desc}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+
+                  <ul class="flex flex-wrap gap-1.5 border-t border-[var(--border)] pt-3">
+                    {project.stack.map((tech) => (
+                      <li class="flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--surface-sunken)] px-2 py-1 text-xs text-[var(--text-muted)]">
+                        <Icon
+                          name={tech}
+                          class="text-sm text-[var(--text-faint)]"
+                          title={iconLabel(tech)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+
+                  <ul class="flex flex-wrap gap-2">
+                    {project.links.map((link) =>
+                      link.url ? (
+                        <li>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-medium transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text)]"
+                          >
+                            <Icon name={link.icon} class="text-sm" />
+                            {link.label}
+                            <Icon name="arrow-up-right" class="text-xs" />
+                          </a>
+                        </li>
+                      ) : (
+                        <li
+                          class="inline-flex cursor-not-allowed items-center gap-1.5 rounded-full border border-dashed border-[var(--border)] px-3 py-1.5 text-xs text-[var(--text-faint)] opacity-60"
+                          title="Enlace pendiente de publicación"
+                        >
+                          <Icon name={link.icon} class="text-sm" />
+                          {link.label}
+                          <span class="sr-only">(no disponible todavía)</span>
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </article>
+        );
+      })
+    }
+  </div>
+</section>

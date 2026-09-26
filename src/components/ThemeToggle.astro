@@ -1,0 +1,136 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Light / dark / system switch. The current value lives in
+ * localStorage.theme and is mirrored onto <html data-theme> so the CSS
+ * variables (and therefore the colours) follow it.
+ */
+---
+
+<div class="relative" data-theme-root>
+  <button
+    type="button"
+    class="flex size-8 items-center justify-center rounded-full text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-sunken)] hover:text-[var(--text)]"
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-label="Cambiar tema"
+    data-theme-btn
+  >
+    <span class="sr-only">Cambiar tema</span>
+    <Icon name="sun" class="text-lg" data-theme-icon="light" />
+    <Icon name="moon" class="hidden text-lg" data-theme-icon="dark" />
+    <Icon name="monitor" class="hidden text-lg" data-theme-icon="system" />
+  </button>
+
+  <div
+    class="invisible absolute top-full right-0 z-50 mt-1.5 origin-top-right scale-95 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-1 opacity-0 shadow-xl transition-all duration-150"
+    role="menu"
+    data-theme-menu
+  >
+    <ul>
+      {
+        (
+          [
+            { value: 'light', label: 'Claro', icon: 'sun' },
+            { value: 'dark', label: 'Oscuro', icon: 'moon' },
+            { value: 'system', label: 'Sistema', icon: 'monitor' },
+          ] as const
+        ).map((opt) => (
+          <li>
+            <button
+              type="button"
+              role="menuitemradio"
+              aria-checked="false"
+              class="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left text-sm text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-sunken)] hover:text-[var(--text)]"
+              data-theme-option={opt.value}
+            >
+              <Icon name={opt.icon} class="text-sm" />
+              <span class="flex-1">{opt.label}</span>
+              <Icon name="check" class="hidden text-sm" data-theme-check={opt.value} />
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<script>
+  type Theme = 'light' | 'dark' | 'system';
+
+  const STORAGE_KEY = 'theme';
+  const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function readStored(): Theme {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw === 'light' || raw === 'dark' || raw === 'system' ? raw : 'system';
+  }
+
+  /** `system` collapses to whatever the OS currently reports. */
+  function resolve(theme: Theme): 'light' | 'dark' {
+    return theme === 'system' ? (mql.matches ? 'dark' : 'light') : theme;
+  }
+
+  /**
+   * `choice` is the user's pick (drives which menu item is checked);
+   * `data-theme` gets the resolved value, which is what the CSS keys off.
+   */
+  function apply(choice: Theme) {
+    const resolved = resolve(choice);
+    document.documentElement.dataset.theme = resolved;
+    document.documentElement.style.colorScheme = resolved;
+
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', resolved === 'dark' ? '#111a17' : '#fbfdfc');
+
+    // The three-way button reflects the choice, not the resolved value.
+    document.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach((el) => {
+      el.classList.toggle('hidden', el.dataset.themeIcon !== choice);
+    });
+    document.querySelectorAll<HTMLElement>('[data-theme-option]').forEach((el) => {
+      const active = el.dataset.themeOption === choice;
+      el.setAttribute('aria-checked', String(active));
+      el.classList.toggle('text-[var(--text)]', active);
+      el.classList.toggle('font-medium', active);
+      el.querySelector('[data-theme-check]')?.classList.toggle('hidden', !active);
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-theme-root]').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('[data-theme-btn]');
+    const menu = root.querySelector<HTMLElement>('[data-theme-menu]');
+
+    const setOpen = (open: boolean) => {
+      if (!menu || !btn) return;
+      menu.classList.toggle('invisible', !open);
+      menu.classList.toggle('opacity-0', !open);
+      menu.classList.toggle('scale-95', !open);
+      btn.setAttribute('aria-expanded', String(open));
+    };
+
+    btn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(btn.getAttribute('aria-expanded') !== 'true');
+    });
+    menu?.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', () => setOpen(false));
+
+    menu?.querySelectorAll<HTMLButtonElement>('[data-theme-option]').forEach((opt) => {
+      opt.addEventListener('click', () => {
+        const value = opt.dataset.themeOption as Theme;
+        localStorage.setItem(STORAGE_KEY, value);
+        apply(value);
+        setOpen(false);
+      });
+    });
+
+    // Keep "system" honest: follow the OS when the user has not pinned a theme.
+    mql.addEventListener('change', () => {
+      if (readStored() === 'system') apply('system');
+    });
+  });
+
+  apply(readStored());
+</script>

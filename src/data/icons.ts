@@ -1,0 +1,126 @@
+/**
+ * Human-readable labels for sprite icon names.
+ *
+ * Used wherever an icon stands on its own (screen-reader text, tooltips), so
+ * the accessible name is "React" and not "react", and "Java" and not
+ * "brand-java".
+ */
+export const ICON_LABELS: Record<string, string> = {
+  /* brands */
+  react: 'React',
+  nextdotjs: 'Next.js',
+  angular: 'Angular',
+  vuedotjs: 'Vue',
+  nodedotjs: 'Node.js',
+  nestjs: 'NestJS',
+  express: 'Express',
+  dotnet: '.NET',
+  spring: 'Spring Boot',
+  typescript: 'TypeScript',
+  javascript: 'JavaScript',
+  python: 'Python',
+  go: 'Go',
+  tailwindcss: 'Tailwind CSS',
+  mui: 'MUI',
+  sass: 'Sass',
+  astro: 'Astro',
+  vite: 'Vite',
+  postgresql: 'PostgreSQL',
+  mysql: 'MySQL',
+  mongodb: 'MongoDB',
+  redis: 'Redis',
+  prisma: 'Prisma',
+  flyway: 'Flyway',
+  graphql: 'GraphQL',
+  docker: 'Docker',
+  kubernetes: 'Kubernetes',
+  terraform: 'Terraform',
+  nginx: 'Nginx',
+  grafana: 'Grafana',
+  prometheus: 'Prometheus',
+  apachekafka: 'Apache Kafka',
+  elasticsearch: 'Elasticsearch',
+  git: 'Git',
+  github: 'GitHub',
+  gitlab: 'GitLab',
+  jquery: 'jQuery',
+  jira: 'Jira',
+  confluence: 'Confluence',
+  jenkins: 'Jenkins',
+  claudecode: 'Claude Code',
+  anthropic: 'Anthropic',
+  googlecloud: 'Google Cloud',
+  figma: 'Figma',
+  flutter: 'Flutter',
+  linux: 'Linux',
+  apple: 'macOS',
+  vercel: 'Vercel',
+  netlify: 'Netlify',
+  x: 'X',
+  whatsapp: 'WhatsApp',
+  telegram: 'Telegram',
+  gmail: 'Gmail',
+
+  /* brands removed from Simple Icons, drawn by hand */
+  'brand-java': 'Java',
+  'brand-oracle': 'Oracle DB',
+  'brand-sqlserver': 'SQL Server',
+  'brand-aws': 'AWS',
+  'brand-linkedin': 'LinkedIn',
+  'brand-reactnative': 'React Native',
+  'brand-ai': 'IA',
+
+  /* generic */
+  database: 'Base de datos',
+  cloud: 'Cloud',
+  'cloud-cpu': 'Infraestructura',
+  smartphone: 'Móvil',
+  briefcase: 'Experiencia',
+  'map-pin': 'Ubicación',
+  mail: 'Email',
+  phone: 'Teléfono',
+  'external-link': 'Enlace externo',
+  'arrow-up-right': 'Abrir enlace',
+  copy: 'Copiar',
+  check: 'Verificado',
+  sun: 'Tema claro',
+  moon: 'Tema oscuro',
+  monitor: 'Tema del sistema',
+  menu: 'Menú',
+  close: 'Cerrar',
+  'chevron-down': 'Desplegar',
+  'chevron-right': 'Ir',
+  award: 'Certificación',
+  'graduation-cap': 'Educación',
+  code: 'Código',
+  layers: 'Arquitectura',
+  'git-branch': 'Control de versiones',
+  terminal: 'Terminal',
+  'shield-check': 'Buenas prácticas',
+  zap: 'Destacado',
+  'book-open': 'Formación',
+  search: 'Buscar',
+  command: 'Comando',
+  printer: 'Imprimir',
+  user: 'Perfil',
+  target: 'Objetivo',
+  rocket: 'Proyecto',
+  file: 'Documento',
+  'scale-3d': 'Patrones de diseño',
+  workflow: 'Metodología',
+  'trending-up': 'Logros',
+  clock: 'Duración',
+  filter: 'Filtrar',
+  'download': 'Descargar',
+  'external-square': 'Enlace',
+};
+
+/** Label for an icon name, falling back to a title-cased slug. */
+export function iconLabel(name: string): string {
+  if (ICON_LABELS[name]) return ICON_LABELS[name];
+  return name
+    .replace(/^brand-/, '')
+    .split(/[-.]/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}

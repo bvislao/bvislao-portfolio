@@ -1,0 +1,161 @@
+---
+import '../styles/global.css';
+import { SITE_URL, site } from '../data/site';
+import { experience } from '../data/experience';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const pageTitle = title ?? `${site.fullName} — ${site.role}`;
+const pageDescription = description ?? site.metaDescription;
+
+/** Short, human-readable title for social cards. */
+const socialTitle = `${site.fullName} · ${site.role}`;
+
+const ogImage = `${SITE_URL}/og.png`;
+
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+
+const profileUrls = site.socials.map((s) => s.href);
+
+/**
+ * `rel=me` is only for the accounts that actually identify the author.
+ * WhatsApp is a contact channel, not a profile, so it stays out of here (but
+ * remains in sameAs, which is fine: schema.org only requires valid URLs).
+ */
+const identityUrls = site.socials.slice(0, 2).map((s) => s.href);
+
+/**
+ * schema.org Person. Everything here is read from the data layer, so the
+ * structured data can never drift from the visible page.
+ */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE_URL}/#person`,
+  name: site.fullName,
+  alternateName: `${site.firstName} ${site.lastName}`,
+  jobTitle: site.role,
+  description: site.summary,
+  url: SITE_URL,
+  email: `mailto:${site.email}`,
+  telephone: site.phone,
+  image: `${SITE_URL}${site.photo.src}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.location.city,
+    addressCountry: site.location.country,
+  },
+  sameAs: profileUrls,
+  knowsAbout: [
+    'TypeScript',
+    'React',
+    'Next.js',
+    'Angular',
+    'Node.js',
+    'NestJS',
+    '.NET',
+    'Java',
+    'Spring Boot',
+    'PostgreSQL',
+    'Docker',
+    'Clean Architecture',
+  ],
+  hasCredential: [
+    {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'Ingeniería de Sistemas',
+      credentialCategory: 'degree',
+    },
+  ],
+  worksFor: experience.slice(0, 4).map((r) => ({
+    '@type': 'Organization',
+    name: r.client ?? r.company,
+  })),
+};
+
+/**
+ * Runs before first paint so the correct theme is applied without a flash.
+ * Kept inline and blocking on purpose: deferring it would reintroduce the
+ * FOUC it exists to prevent. `is:inline` prevents Astro from bundling it.
+ *
+ * `data-theme` always holds a *resolved* value (`light` or `dark`) because that
+ * is what the CSS keys off. The user's *choice* (`light`/`dark`/`system`) lives
+ * in localStorage and is read back by ThemeToggle. Resolving here is what
+ * makes "system" actually track the OS.
+ */
+const themeScript = `!function(){var r=document.documentElement,c;try{var s=localStorage.getItem('theme');c=s==='light'||s==='dark'?s:window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch(e){c='light'}r.dataset.theme=c;r.style.colorScheme=c;var m=r.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',c==='dark'?'#111a17':'#fbfdfc')}();`;
+---
+
+<!doctype html>
+<html lang="es-PE" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={site.fullName} />
+
+    <meta name="theme-color" content="#fbfdfc" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+    />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={`${site.fullName} — Portfolio`} />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.fullName}, ${site.role}`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={`${site.fullName}, ${site.role}`} />
+
+    {identityUrls.map((href) => <link rel="me" href={href} />)}
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+
+    <script is:inline set:html={themeScript} />
+
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
+  </head>
+  <body class="relative min-h-screen">
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-[var(--surface-raised)] focus:px-4 focus:py-2 focus:text-sm focus:shadow-lg"
+    >
+      Saltar al contenido
+    </a>
+
+    <slot />
+
+  </body>
+</html>

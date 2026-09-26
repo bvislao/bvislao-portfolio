@@ -1,0 +1,139 @@
+---
+import Icon from './Icon.astro';
+import { skillGroups, certifications } from '../data/skills';
+import { education } from '../data/education';
+import { iconLabel } from '../data/icons';
+---
+
+<!-- Stack -->
+<section id="stack" class="scroll-mt-24" aria-labelledby="stack-heading">
+  <header class="mb-6">
+    <h2
+      id="stack-heading"
+      class="flex items-center gap-2 text-xl font-semibold tracking-tight"
+    >
+      <Icon name="layers" class="text-xl text-[var(--accent)]" />
+      Stack
+    </h2>
+    <p class="mt-1 text-sm text-[var(--text-muted)]">
+      Herramientas que uso a diario, agrupadas por dominio.
+    </p>
+  </header>
+
+  <div class="grid gap-3 sm:grid-cols-2">
+    {
+      skillGroups.map((group) => (
+        <div class="surface-card p-4">
+          <div class="mb-3 flex items-start gap-2.5">
+            <span class="flex size-8 flex-none items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-base text-[var(--accent)]">
+              <Icon name={group.icon} class="text-base" />
+            </span>
+            <div class="min-w-0">
+              <h3 class="text-sm font-semibold">{group.label}</h3>
+              <p class="mt-0.5 text-xs leading-relaxed text-[var(--text-faint)] text-pretty">
+                {group.blurb}
+              </p>
+            </div>
+          </div>
+
+          <ul class="flex flex-wrap gap-1.5" aria-label={group.label}>
+            {group.skills.map((skill) => (
+              <li
+                class="flex items-center gap-1.5 rounded-md border border-[var(--border)] bg-[var(--surface-sunken)] py-1 pr-2.5 pl-2 text-xs text-[var(--text-muted)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text)]"
+                title={`${skill.name}${skill.level ? ` — nivel ${skill.level}/3` : ''}`}
+              >
+                <Icon name={skill.icon} class="text-sm" title={iconLabel(skill.icon)} />
+                <span>{skill.name}</span>
+                {skill.level && (
+                  <span class="flex items-center gap-0.5" aria-hidden="true">
+                    {[1, 2, 3].map((n) => (
+                      <span
+                        class:list={[
+                          'size-1 rounded-full',
+                          n <= skill.level!
+                            ? 'bg-[var(--accent)]'
+                            : 'bg-[var(--border-strong)]',
+                        ]}
+                      />
+                    ))}
+                  </span>
+                )}
+                <span class="sr-only">
+                  {skill.level ? `, nivel ${skill.level} de 3` : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<!-- Educación -->
+<section id="educacion" class="scroll-mt-24" aria-labelledby="educacion-heading">
+  <header class="mb-6">
+    <h2
+      id="educacion-heading"
+      class="flex items-center gap-2 text-xl font-semibold tracking-tight"
+    >
+      <Icon name="graduation-cap" class="text-xl text-[var(--accent)]" />
+      Educación
+    </h2>
+  </header>
+
+  <div class="grid gap-6 sm:grid-cols-2">
+    <ul class="space-y-2">
+      {
+        education.map((item) => (
+          <li class="surface-card flex items-start gap-3 p-4">
+            <span class="flex size-9 flex-none items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--accent)_12%,transparent)] text-base text-[var(--accent)]">
+              <Icon name={item.icon} class="text-base" />
+            </span>
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-semibold">
+                {item.href ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="-m-1.5 inline-flex min-h-6 items-center gap-1 rounded p-1.5 hover:text-[var(--accent)]"
+                  >
+                    {item.institution}
+                    <Icon name="arrow-up-right" class="text-xs opacity-60" />
+                  </a>
+                ) : (
+                  item.institution
+                )}
+              </h3>
+              <p class="mt-0.5 text-sm text-[var(--text-muted)]">{item.degree}</p>
+              <p class="mt-1 text-xs text-[var(--text-faint)] tabular-nums">{item.period}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div>
+      <h3 class="mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[var(--text-faint)] uppercase">
+        <Icon name="award" class="text-sm text-[var(--accent)]" />
+        Certificaciones
+      </h3>
+      <ul class="space-y-2">
+        {
+          certifications.map((cert) => (
+            <li class="surface-card flex items-start gap-3 p-3.5">
+              <Icon name="award" class="mt-0.5 flex-none text-base text-[var(--accent)]" />
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium">{cert.name}</p>
+                <p class="mt-0.5 text-xs text-[var(--text-faint)]">
+                  {cert.issuer} · <span class="tabular-nums">{cert.year}</span>
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

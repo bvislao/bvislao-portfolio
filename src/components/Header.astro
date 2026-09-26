@@ -1,0 +1,205 @@
+---
+import Icon from './Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { nav, site } from '../data/site';
+---
+
+<header
+  class="print-hidden fixed inset-x-0 top-0 z-40 pt-3 print:hidden"
+  data-header
+>
+  <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3">
+    <!-- Desktop pill nav -->
+    <nav
+      aria-label="Principal"
+      class="hidden items-center gap-0.5 rounded-full border border-[var(--border)] bg-[color-mix(in_oklab,var(--surface-raised)_82%,transparent)] px-2 py-1.5 text-sm font-medium text-[var(--text-muted)] shadow-lg shadow-black/5 backdrop-blur-xl md:flex"
+      data-nav
+    >
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class="nav-link relative rounded-full px-3 py-1.5 transition-colors hover:text-[var(--text)]"
+          data-nav-link={item.href.slice(1)}
+        >
+          {item.label}
+        </a>
+      ))}
+      <span class="mx-0.5 h-5 w-px bg-[var(--border)]" aria-hidden="true"></span>
+      <ThemeToggle />
+    </nav>
+
+    <!-- Mobile bar -->
+    <div
+      class="flex w-full items-center justify-between gap-2 rounded-full border border-[var(--border)] bg-[color-mix(in_oklab,var(--surface-raised)_82%,transparent)] px-3 py-1.5 text-sm shadow-lg shadow-black/5 backdrop-blur-xl md:hidden"
+    >
+      <a href="#contenido" class="flex min-h-8 items-center font-semibold tracking-tight">{site.firstName}</a>
+      <div class="flex items-center gap-1">
+        <ThemeToggle />
+        <button
+          type="button"
+          class="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[var(--surface-sunken)]"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+          data-menu-btn
+        >
+          <span class="sr-only">Abrir menú</span>
+          <Icon name="menu" class="text-lg" data-menu-icon />
+          <Icon name="close" class="hidden text-lg" data-close-icon />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div
+    id="mobile-nav"
+    class="invisible fixed inset-0 z-50 opacity-0 transition-opacity duration-200 md:hidden"
+    data-drawer
+  >
+    <div
+      class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      data-drawer-backdrop
+    >
+    </div>
+    <nav
+      aria-label="Principal"
+      class="absolute top-3 right-3 left-3 origin-top -translate-y-2 scale-95 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-2 shadow-2xl transition-transform duration-200"
+      data-drawer-panel
+    >
+      <ul class="flex flex-col">
+        {nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-[var(--text-muted)] transition-colors hover:bg-[var(--surface-sunken)] hover:text-[var(--text)]"
+              data-drawer-link
+            >
+              {item.label}
+              <Icon name="chevron-right" class="text-base opacity-40" />
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="mt-2 border-t border-[var(--border)] pt-2">
+        <a
+          href={site.resume.href}
+          class="flex items-center gap-2 rounded-xl px-4 py-3 text-base font-medium text-[var(--accent)] transition-colors hover:bg-[var(--surface-sunken)]"
+          download
+        >
+          <Icon name="file" class="text-base" />
+          {site.resume.label}
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  /* ---------------------------------------------------------------
+   * Mobile drawer: open/close, focus trap-lite, Esc to dismiss.
+   * ------------------------------------------------------------- */
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
+  const backdrop = document.querySelector<HTMLElement>('[data-drawer-backdrop]');
+  const panel = document.querySelector<HTMLElement>('[data-drawer-panel]');
+
+  let lastFocused: HTMLElement | null = null;
+
+  function setDrawer(open: boolean) {
+    if (!drawer || !menuBtn) return;
+    drawer.classList.toggle('invisible', !open);
+    drawer.classList.toggle('opacity-0', !open);
+    panel?.classList.toggle('-translate-y-2', !open);
+    panel?.classList.toggle('scale-95', !open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.querySelector('[data-menu-icon]')?.classList.toggle('hidden', open);
+    menuBtn.querySelector('[data-close-icon]')?.classList.toggle('hidden', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      lastFocused = document.activeElement as HTMLElement;
+      panel?.querySelector<HTMLAnchorElement>('a')?.focus();
+    } else {
+      lastFocused?.focus();
+    }
+  }
+
+  menuBtn?.addEventListener('click', () =>
+    setDrawer(menuBtn.getAttribute('aria-expanded') !== 'true'),
+  );
+  backdrop?.addEventListener('click', () => setDrawer(false));
+  drawer?.querySelectorAll('[data-drawer-link]').forEach((link) =>
+    link.addEventListener('click', () => setDrawer(false)),
+  );
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuBtn?.getAttribute('aria-expanded') === 'true') {
+      setDrawer(false);
+    }
+  });
+
+  /* ---------------------------------------------------------------
+   * Scroll-spy. Uses IntersectionObserver rather than a scroll
+   * handler, so it costs nothing while the page is idle.
+   * ------------------------------------------------------------- */
+  const sections = [...document.querySelectorAll<HTMLElement>('main section[id]')];
+  const links = new Map<string, HTMLAnchorElement>();
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]').forEach((a) => {
+    const id = a.dataset.navLink;
+    if (id) links.set(id, a);
+  });
+
+  if (sections.length && 'IntersectionObserver' in window) {
+    const visible = new Map<string, number>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const id = (entry.target as HTMLElement).id;
+          if (entry.isIntersecting) visible.set(id, entry.intersectionRatio);
+          else visible.delete(id);
+        }
+
+        // Highlight whichever tracked section currently covers the most
+        // viewport area; fall back to the topmost one.
+        let best = '';
+        let bestRatio = -1;
+        for (const [id, ratio] of visible) {
+          if (ratio > bestRatio) {
+            bestRatio = ratio;
+            best = id;
+          }
+        }
+        if (!best && window.scrollY < 80) best = sections[0]!.id;
+
+        for (const [id, a] of links) {
+          const active = id === best;
+          a.classList.toggle('nav-link-active', active);
+          if (active) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        }
+      },
+      // Bias the root margin so a section counts as "active" once it
+      // reaches the upper third of the viewport.
+      { rootMargin: '-20% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] },
+    );
+
+    sections.forEach((s) => observer.observe(s));
+  }
+</script>
+
+<style>
+  .nav-link-active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .nav-link-active::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0.75rem;
+    bottom: 0.125rem;
+    height: 2px;
+    border-radius: 9999px;
+    background-color: var(--accent);
+  }
+</style>

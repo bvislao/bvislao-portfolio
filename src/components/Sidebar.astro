@@ -1,0 +1,193 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { experience, totalExperience } from '../data/experience';
+import { skillGroups } from '../data/skills';
+
+const years = totalExperience();
+const roleCount = new Set(experience.map((r) => r.client ?? r.company)).size;
+const techCount = new Set(skillGroups.flatMap((g) => g.skills.map((s) => s.name))).size;
+---
+
+<div class="flex flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
+  <!-- Identity -->
+  <section class="flex flex-col gap-5 print:gap-0">
+    <div class="group relative w-fit">
+      <div
+        class="absolute -inset-1.5 rounded-full bg-[var(--accent)] opacity-15 blur-xl transition-opacity group-hover:opacity-30"
+        aria-hidden="true"
+      >
+      </div>
+      <img
+        src={site.photo.src}
+        alt={site.photo.alt}
+        width={site.photo.width}
+        height={site.photo.height}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="relative size-28 rounded-full object-cover ring-2 ring-[var(--border)] transition-transform duration-300 group-hover:scale-[1.03] sm:size-32"
+      />
+    </div>
+
+    <div class="space-y-1">
+      <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">{site.fullName}</h1>
+      <p class="font-medium text-[var(--accent)]">{site.role}</p>
+      <p class="text-sm text-[var(--text-muted)]">{site.tagline}</p>
+      <p class="flex items-center gap-1.5 pt-1 text-sm text-[var(--text-faint)]">
+        <Icon name="map-pin" class="text-base" />
+        {site.location.city}, {site.location.countryName}
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2 print:hidden">
+      <a
+        href={site.resume.href}
+        download
+        class="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-contrast)] transition-transform hover:scale-[1.03] active:scale-95"
+      >
+        <Icon name="file" class="text-base" />
+        {site.resume.label}
+      </a>
+      <a
+        href="#contacto"
+        class="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text-muted)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text)]"
+      >
+        <Icon name="mail" class="text-base" />
+        Escríbeme
+      </a>
+    </div>
+  </section>
+
+  <!-- Quick stats -->
+  <dl class="grid grid-cols-3 gap-2 print:hidden" data-stats>
+    <div class="surface-card px-3 py-2.5 text-center">
+      <dt class="text-[0.65rem] font-medium tracking-wide text-[var(--text-faint)] uppercase">
+        Años
+      </dt>
+      <dd class="text-lg font-semibold tabular-nums">{years}+</dd>
+    </div>
+    <div class="surface-card px-3 py-2.5 text-center">
+      <dt class="text-[0.65rem] font-medium tracking-wide text-[var(--text-faint)] uppercase">
+        Empresas
+      </dt>
+      <dd class="text-lg font-semibold tabular-nums">{roleCount}</dd>
+    </div>
+    <div class="surface-card px-3 py-2.5 text-center">
+      <dt class="text-[0.65rem] font-medium tracking-wide text-[var(--text-faint)] uppercase">
+        Stack
+      </dt>
+      <dd class="text-lg font-semibold tabular-nums">{techCount}</dd>
+    </div>
+  </dl>
+
+  <!-- About -->
+  <section class="space-y-2">
+    <h2 class="flex items-center gap-2 text-sm font-semibold tracking-wide text-[var(--text-faint)] uppercase">
+      <Icon name="user" class="text-base" />
+      Sobre mí
+    </h2>
+    <p class="text-pretty text-sm leading-relaxed text-[var(--text-muted)]">
+      {site.summary}
+    </p>
+  </section>
+
+  <!-- Contact -->
+  <section class="space-y-2" id="contacto" data-print-keep>
+    <h2 class="flex items-center gap-2 text-sm font-semibold tracking-wide text-[var(--text-faint)] uppercase">
+      <Icon name="mail" class="text-base" />
+      Contacto
+    </h2>
+
+    <ul class="space-y-1">
+      <li class="group flex items-center gap-1 rounded-lg pr-1 transition-colors hover:bg-[var(--surface-sunken)]">
+        <a
+          href={`mailto:${site.email}`}
+          class="flex min-w-0 flex-1 items-center gap-2.5 px-2 py-1.5 text-sm"
+        >
+          <Icon name="mail" class="text-base text-[var(--text-faint)]" />
+          <span class="truncate">{site.email}</span>
+        </a>
+        <button
+          type="button"
+          class="flex size-7 items-center justify-center rounded text-[var(--text-faint)] transition-colors hover:text-[var(--text)]"
+          data-copy={site.email}
+          aria-label={`Copiar ${site.email}`}
+          title="Copiar email"
+        >
+          <Icon name="copy" class="text-sm" />
+        </button>
+      </li>
+      <li>
+        <a
+          href={`tel:${site.phoneRaw}`}
+          class="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-[var(--surface-sunken)]"
+        >
+          <Icon name="phone" class="text-base text-[var(--text-faint)]" />
+          {site.phone}
+        </a>
+      </li>
+      {
+        site.socials.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              target="_blank"
+              rel="me noopener noreferrer"
+              class="flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-[var(--surface-sunken)]"
+            >
+              <Icon name={s.icon} class="text-base text-[var(--text-faint)]" />
+              <span class="flex-1">{s.label}</span>
+              <span class="text-xs text-[var(--text-faint)]">{s.handle}</span>
+              <Icon
+                name="arrow-up-right"
+                class="text-sm text-[var(--text-faint)] opacity-0 transition-opacity group-hover:opacity-100"
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</div>
+
+<!-- Toast for the copy-to-clipboard action -->
+<div
+  class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 translate-y-2 rounded-full border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2 text-sm font-medium opacity-0 shadow-lg transition-all duration-200"
+  role="status"
+  aria-live="polite"
+  data-toast
+>
+  <span data-toast-text>Copiado</span>
+</div>
+
+<script>
+  const toast = document.querySelector<HTMLElement>('[data-toast]');
+  const toastText = document.querySelector<HTMLElement>('[data-toast-text]');
+  let hideTimer: number | undefined;
+
+  function showToast(message: string) {
+    if (!toast || !toastText) return;
+    toastText.textContent = message;
+    toast.classList.remove('translate-y-2', 'opacity-0');
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => {
+      toast.classList.add('translate-y-2', 'opacity-0');
+    }, 1800);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      // The button lives inside an <a>; keep the link from navigating.
+      e.preventDefault();
+      e.stopPropagation();
+      const value = btn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(value);
+        showToast('Copiado al portapapeles');
+      } catch {
+        showToast('No se pudo copiar');
+      }
+    });
+  });
+</script>

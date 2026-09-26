@@ -1,0 +1,56 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Canonical domain. Previews that do not set this fall back to the default
+  # in astro.config.mjs, so a deploy preview never claims to be production.
+  PUBLIC_SITE_URL = "https://bvislaoch.dev"
+
+# Regenerate the icon sprite and the social card on every build so they can
+# never drift from the data layer.
+[build.processing]
+  skip_processing = false
+
+[context.production.environment]
+  PUBLIC_SITE_URL = "https://bvislaoch.dev"
+
+[context.deploy-preview.environment]
+  PUBLIC_SITE_URL = "https://deploy-preview.bvislaoch.dev"
+
+[context.branch-deploy.environment]
+  PUBLIC_SITE_URL = "https://branch-deploy.bvislaoch.dev"
+
+# Static assets are content-hashed by Astro, so they can be cached forever.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/og.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Fingerprint-free assets: revalidate so a redeploy is picked up quickly.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[redirects]]
+  from = "/cv/*"
+  to = "/cv-bryan-vislao.pdf"
+  status = 301
+  force = true
